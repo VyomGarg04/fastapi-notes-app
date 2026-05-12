@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html>
-  <body>
+{% extends "base.html" %}
 
-    <h1>Edit Note</h1>
+{% block title %}
+Edit Note
+{% endblock %}
 
-    <form method="POST">
+{% block content %}
+
+<form method="POST">
 
       <input
         type="text"
@@ -16,6 +18,10 @@
 
       <textarea name="desc">{{ note.desc }}</textarea>
 
+      {% if note.important %}
+      checked
+      {% endif %}
+
       <br><br>
 
       <button type="submit">
@@ -24,5 +30,4 @@
 
     </form>
 
-  </body>
-</html>
+{% endblock %}
