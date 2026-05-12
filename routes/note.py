@@ -14,17 +14,35 @@ templates = Jinja2Templates(directory = "templates")
 notes_collection = conn.notes.notes2
 
 
+#to get the notes
 @note.get("/",response_class = HTMLResponse)
-async def get_notes(request: Request):
-    docs = notes_collection.find({})
-    newDocs = notesEntity(docs)
-    return templates.TemplateResponse(
-        request=request,
-        name = "index.html",
-        context = {"request":request, "newDocs": newDocs}
-    )
+async def get_notes(request: Request, q:str = None):
+    if q:
+        results = notes_collection.find({"title": {
+            "$regex": q,
+            "$options": "i"
+            }})
+        newDocs = notesEntity(results)
+        return templates.TemplateResponse(
+            request=request,
+            name="index.html",
+            context = {"request":request, "newDocs": newDocs}
+        )
+    else:
+        docs = notes_collection.find({})
+        newDocs = notesEntity(docs)
+        return templates.TemplateResponse(
+            request=request,
+            name = "index.html",        
+            context = {"request":request, "newDocs": newDocs}
+        )
+        
 
 
+    
+
+
+#to create a new note
 @note.post("/")
 async def create_note(request: Request):
     form = await request.form()
@@ -33,6 +51,7 @@ async def create_note(request: Request):
     inserted_note = notes_collection.insert_one(formDict)
     return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
 
+#to delete the note
 @note.get("/delete/{id}")
 async def  delete_note(id: str):
     notes_collection.delete_one({"_id": ObjectId(id)})
@@ -40,7 +59,7 @@ async def  delete_note(id: str):
 
 
 
-
+#to update/edit the previously created note
 @note.get("/edit/{id}",response_class = HTMLResponse)
 async def edit_note(request: Request, id: str):
     note_found = notes_collection.find_one({"_id": ObjectId(id)})
@@ -54,7 +73,6 @@ async def edit_note(request: Request, id: str):
             }
         )
 
-
 @note.post("/edit/{id}")
 async def save_edited_note(request: Request, id:str):
     form = await request.form()
@@ -62,3 +80,6 @@ async def save_edited_note(request: Request, id:str):
     formDict["important"] = True if formDict.get("important") == "on" else False
     notes_collection.update_one({"_id": ObjectId(id)}, {"$set": formDict})
     return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
+
+
+
