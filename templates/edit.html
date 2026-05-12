@@ -7,26 +7,33 @@ Edit Note
 {% block content %}
 
 <form method="POST">
+  <label for="note_title" class="form-label">Note Title</label>
+  <br>
+  <input
+    type="text"
+    class="form-control"
+    name="title"
+    value="{{ note.title }}"
+  >
 
-      <input
-        type="text"
-        name="title"
-        value="{{ note.title }}"
-      >
+  <br>
+  <label for="note_desc" class="form-label">Note Description</label>
+      <textarea name="desc" class="form-control">{{ note.desc }}</textarea>
 
-      <br><br>
+      <br>
 
-      <textarea name="desc">{{ note.desc }}</textarea>
-
+      <input type="checkbox" name="important" value="on" 
       {% if note.important %}
       checked
       {% endif %}
+      >
+      <label class="form-check-label" for="important">Is the note IMPORTANT?</label>
+
+
+
 
       <br><br>
-
-      <button type="submit">
-        Update Note
-      </button>
+      <button type="submit" class="btn btn-primary">Update Note</button>
 
     </form>
 

@@ -1,7 +1,7 @@
 from fastapi import Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi import APIRouter
-from models.note import Note
+# from models.note import Note
 from config.db import conn
 from schemas.note import noteEntity, notesEntity
 from fastapi.templating import Jinja2Templates
@@ -25,15 +25,15 @@ async def get_notes(request: Request):
     )
 
 
-@note.post("/",response_class=HTMLResponse)
+@note.post("/")
 async def create_note(request: Request):
     form = await request.form()
     formDict = dict(form)
-    formDict["important"] = True if formDict.get("important") == "on" else False
+    formDict["important"] = formDict.get("important") == "on"
     inserted_note = notes_collection.insert_one(formDict)
     return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
 
-@note.get("/delete/{id}",response_class = HTMLResponse)
+@note.get("/delete/{id}")
 async def  delete_note(id: str):
     notes_collection.delete_one({"_id": ObjectId(id)})
     return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
@@ -55,7 +55,7 @@ async def edit_note(request: Request, id: str):
         )
 
 
-@note.post("/edit/{id}",response_class=HTMLResponse)
+@note.post("/edit/{id}")
 async def save_edited_note(request: Request, id:str):
     form = await request.form()
     formDict = dict(form)
