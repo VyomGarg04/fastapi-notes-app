@@ -25,6 +25,10 @@ Home
 </form> 
 <br><br>
 <h2>Your Notes</h2>
+{% if q %}
+<h4>Showing results for {{ q }} </h4>
+{% endif %}
+<br>
 <div id="notes-container" class="row g-3">
   {% for note in newDocs %}
     <div class="col-md-4">
@@ -41,7 +45,12 @@ Home
           </a>
           <a href="/edit/{{ note.id }}" class="btn btn-secondary  ">
               Edit
-        </a>
+          </a>
+          <a>
+            {% if note.created_at %}
+            <h6>{{ note.created_at }}</h6>
+            {% endif %}
+          </a>
         </div>
       </div>
     </div>

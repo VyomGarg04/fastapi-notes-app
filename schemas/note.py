@@ -5,6 +5,7 @@ def noteEntity(item) -> dict:
         "title": item.get("title",""),
         "desc": item.get("desc",""),
         "important": item.get("important", False),
+        "created_at": item.get("created_at")
     }
 
 def notesEntity(items) -> list:

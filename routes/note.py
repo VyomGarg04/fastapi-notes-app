@@ -7,6 +7,7 @@ from schemas.note import noteEntity, notesEntity
 from fastapi.templating import Jinja2Templates
 import starlette.status as status
 from bson import ObjectId
+from datetime import datetime, UTC
 
 note = APIRouter()
 templates = Jinja2Templates(directory = "templates")
@@ -48,6 +49,7 @@ async def create_note(request: Request):
     form = await request.form()
     formDict = dict(form)
     formDict["important"] = formDict.get("important") == "on"
+    formDict["created_at"] = datetime.now(UTC)
     inserted_note = notes_collection.insert_one(formDict)
     return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
 
