@@ -29,7 +29,7 @@ Home
   {% if q and filter_important %}
   <h4>Showing important results for {{ q }} </h4>
   {% elif filter_important %}
-  <h4>Showing Important results</h4>
+  <h4>Showing important notes</h4>
   {% elif q %}
   <h4>Showing results for {{ q }} </h4>
 {% endif %}
@@ -62,7 +62,11 @@ Home
   {% endfor %}
 
   {% else %}
-  <h3>No notes to display!</h3>
+    {% if q %}
+    <h3>No matching notes found.</h3>
+    {% else %}
+    <h3>No notes to display!</h3>
+    {% endif %}
   {% endif %}
 </div>
 
