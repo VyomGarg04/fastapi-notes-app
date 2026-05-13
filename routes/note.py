@@ -26,7 +26,7 @@ async def get_notes(request: Request, q:str = None):
         return templates.TemplateResponse(
             request=request,
             name="index.html",
-            context = {"request":request, "newDocs": newDocs}
+            context = {"request":request, "newDocs": newDocs,"q":q}
         )
     else:
         docs = notes_collection.find({})

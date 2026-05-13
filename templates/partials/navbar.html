@@ -28,15 +28,16 @@
      <form action="/" method="get" class="d-flex">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row">
         <li class="nav-item me-2">
-        <input type="text" name="q" placeholder="Search notes..." class="form-control">
+        <input type="text" name="q"  class="form-control"
+        value="{{ q if q else '' }}"
+        placeholder="Search notes..."
+        >
         </li>
         <li class="nav-item">
         <button type="submit" class="btn btn-primary">Search</button>
         </li>
     </ul>
     </form>
-
-
     </div>
   </div>
 </nav>
