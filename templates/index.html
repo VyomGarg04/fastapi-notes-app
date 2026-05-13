@@ -24,9 +24,14 @@ Home
   <button type="submit" class="btn btn-primary">Submit</button>
 </form> 
 <br><br>
+{% if newDocs %}
 <h2>Your Notes</h2>
-{% if q %}
-<h4>Showing results for {{ q }} </h4>
+  {% if q and filter_important %}
+  <h4>Showing important results for {{ q }} </h4>
+  {% elif filter_important %}
+  <h4>Showing Important results</h4>
+  {% elif q %}
+  <h4>Showing results for {{ q }} </h4>
 {% endif %}
 <br>
 <div id="notes-container" class="row g-3">
@@ -55,6 +60,10 @@ Home
       </div>
     </div>
   {% endfor %}
+
+  {% else %}
+  <h3>No notes to display!</h3>
+  {% endif %}
 </div>
 
 {% endblock %}

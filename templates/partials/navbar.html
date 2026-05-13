@@ -27,6 +27,15 @@
       </ul>
      <form action="/" method="get" class="d-flex">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row">
+      <li class="nav-item me-2">
+        <label class="form-check-label" for="filter_important">IMPORTANT Only</label>
+        <input type="checkbox" 
+        class="form-check-input" 
+        id="filter_important"
+        name="filter_important"
+        value = "true"
+        {% if filter_important %}checked{% endif %}>
+      </li>
         <li class="nav-item me-2">
         <input type="text" name="q"  class="form-control"
         value="{{ q if q else '' }}"
