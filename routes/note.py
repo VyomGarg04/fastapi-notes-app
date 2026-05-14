@@ -27,6 +27,10 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
         query["important"] =True
     #sorting the results by the time created 
     results = notes_collection.find(query).sort("created_at", -1).skip(skip_page).limit(per_page)
+    
+    total_notes = notes_collection.count_documents(query)
+    has_next = page * per_page < total_notes
+    
     newDocs = notesEntity(results)
     return templates.TemplateResponse(
         request=request,
@@ -36,7 +40,8 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
             "newDocs": newDocs,
             "q":q, 
             "filter_important":filter_important,
-            "page":page
+            "page":page,
+            "has_next":has_next
             }
     )
         
