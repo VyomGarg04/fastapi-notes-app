@@ -12,7 +12,7 @@ from datetime import datetime, UTC
 note = APIRouter()
 templates = Jinja2Templates(directory = "templates")
 
-notes_collection = conn.notes.notes2
+notes_collection = conn.notes.notes
 
 
 #to get the notes
@@ -41,7 +41,9 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
             "q":q, 
             "filter_important":filter_important,
             "page":page,
-            "has_next":has_next
+            "has_next":has_next,
+            "show_navbar":True,
+            "use_container": True
             }
     )
         
@@ -75,7 +77,9 @@ async def edit_note(request: Request, id: str):
         name = "edit.html",
         context = {
             "request":request, 
-            "note": note_found
+            "note": note_found,
+            "show_navbar":True,
+            "use_container": True
             }
         )
 
