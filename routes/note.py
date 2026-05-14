@@ -17,19 +17,27 @@ notes_collection = conn.notes.notes2
 
 #to get the notes
 @note.get("/",response_class = HTMLResponse)
-async def get_notes(request: Request, q:str = None, filter_important:bool = False):
+async def get_notes(request: Request, q:str = None, filter_important:bool = False,page:int = 1):
+    per_page = 6
+    skip_page = (page-1)*per_page
     query ={}
     if q:
         query["title"] = {"$regex": q, "$options": "i"}
     if filter_important:
         query["important"] =True
-
-    results = notes_collection.find(query).sort("created_at", -1)
+    #sorting the results by the time created 
+    results = notes_collection.find(query).sort("created_at", -1).skip(skip_page).limit(per_page)
     newDocs = notesEntity(results)
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context = {"request":request, "newDocs": newDocs,"q":q, "filter_important":filter_important}
+        context = {
+            "request":request,
+            "newDocs": newDocs,
+            "q":q, 
+            "filter_important":filter_important,
+            "page":page
+            }
     )
         
         

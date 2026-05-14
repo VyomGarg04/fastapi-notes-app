@@ -70,4 +70,34 @@ Home
   {% endif %}
 </div>
 
+
+<div class="d-flex justify-content-center align-items-center gap-3 mt-4">
+
+  {% if page > 1 %}
+    <a
+      href="/?page={{ page - 1 }}
+      {% if q %}&q={{ q }}{% endif %}
+      {% if filter_important %}&filter_important=true{% endif %}"
+      class="btn btn-outline-primary"
+    >
+      <- Previous
+    </a>
+  {% endif %}
+
+  <h5 class="m-0">Page {{ page }}</h5>
+
+  <a
+    href="/?page={{ page + 1 }}
+    {% if q %}&q={{ q }}{% endif %}
+    {% if filter_important %}&filter_important=true{% endif %}"
+    class="btn btn-outline-primary"
+  >
+    Next ->
+  </a>
+
+</div>
+
+        
+
 {% endblock %}
+
