@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 import starlette.status as status
 from config.db import conn
-from utils.security import create_hash
+from utils.security import create_hash, verify_password
 from schemas.user import userEntity, usersEntity
 
 
@@ -34,8 +34,6 @@ async def create_user(request: Request):
     email = formDict.get("email")
     password = formDict.get("password")
     confirm_password = formDict.get("confirm_password")
-    print(password)
-    print(type(password))
     email = email.lower()
 
     if password != confirm_password:
@@ -58,4 +56,42 @@ async def create_user(request: Request):
     }
     user_collection.insert_one(new_user)
     return RedirectResponse(url = "/login?msg=AccountCreated", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@user.get("/login", response_class = HTMLResponse)
+async def user_login(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="login.html",
+        context = {
+            "request": request,
+            "show_navbar": False,
+            "use_container": False
+
+        }
+    )
+
+@user.post("/login")
+async def check_user(request: Request):
+    form = await request.form()
+    formDict = dict(form)
+
+    email = formDict.get("email")
+    password = formDict.get("password")
+
+
+    if not email:
+        return RedirectResponse(url="/login?error=MissingEmail",status_code=status.HTTP_303_SEE_OTHER)
+    
+    email = email.lower()
+    user = user_collection.find_one({"email":email})
+    if not user:
+        return RedirectResponse(url="/login?error=InvalidCredentials",status_code=status.HTTP_303_SEE_OTHER)
+    stored_hash  = user["password"]
+
+    user_exists = verify_password(password, stored_hash)
+    if user_exists:
+        return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
+    else:
+        return RedirectResponse(url = "/login?msg=LoginUnsuccessful", status_code=status.HTTP_303_SEE_OTHER)
     

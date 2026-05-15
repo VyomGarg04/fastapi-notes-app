@@ -5,13 +5,13 @@ Signup
 {% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', path='signup.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', path='auth.css') }}">
 {% endblock %}
 
 {% block content %}
 
-<div class="signup-page">
-    <div class="signup-container">
+<div class="auth-page">
+    <div class="auth-container">
         <h2>Create Account</h2>
         <form action="#" method="post">
             <div class="form-group">
@@ -32,7 +32,7 @@ Signup
             </div>
             <button type="submit">Sign Up</button>
             <div class="login-link">
-                Already have an account? <a href="#">Login</a>
+                Already have an account? <a href="/login">Login</a>
             </div>
         </form>
     </div>
