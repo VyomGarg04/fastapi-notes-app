@@ -29,7 +29,6 @@ async def user_signup(request: Request):
 async def create_user(request: Request):
     form = await request.form()
     formDict = dict(form)
-
     username = formDict.get("username")
     email = formDict.get("email")
     password = formDict.get("password")
@@ -79,7 +78,6 @@ async def check_user(request: Request):
     email = formDict.get("email")
     password = formDict.get("password")
 
-
     if not email:
         return RedirectResponse(url="/login?error=MissingEmail",status_code=status.HTTP_303_SEE_OTHER)
     
@@ -91,6 +89,8 @@ async def check_user(request: Request):
 
     user_exists = verify_password(password, stored_hash)
     if user_exists:
+        request.session["user"] = email
+        request.session["user_id"] = str(user["_id"])
         return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
     else:
         return RedirectResponse(url = "/login?msg=LoginUnsuccessful", status_code=status.HTTP_303_SEE_OTHER)
