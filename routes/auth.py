@@ -11,7 +11,7 @@ user = APIRouter()
 templates = Jinja2Templates(directory="templates")
 user_collection = conn.notes.users
 
-
+#SIGNUP
 @user.get("/signup", response_class = HTMLResponse)
 async def user_signup(request: Request):
     return templates.TemplateResponse(
@@ -57,6 +57,8 @@ async def create_user(request: Request):
     return RedirectResponse(url = "/login?msg=AccountCreated", status_code=status.HTTP_303_SEE_OTHER)
 
 
+
+#LOGIN
 @user.get("/login", response_class = HTMLResponse)
 async def user_login(request: Request):
     return templates.TemplateResponse(
@@ -95,3 +97,10 @@ async def check_user(request: Request):
     else:
         return RedirectResponse(url = "/login?msg=LoginUnsuccessful", status_code=status.HTTP_303_SEE_OTHER)
     
+
+
+#LOGOUT
+@user.get("/login", response_class = HTMLResponse)
+async def user_login(request: Request):
+    request.session.clear()
+    return RedirectResponse("/login", status_code=302)

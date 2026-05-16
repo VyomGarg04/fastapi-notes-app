@@ -14,6 +14,10 @@
 </head>
 
 <body>
+    {% if show_navbar %}
+        {% include "partials/navbar.html" %}
+    {% endif %}
+
     {% if use_container %}
     <div class="container mt-4">
     {% endif %}

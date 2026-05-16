@@ -1,6 +1,7 @@
 from fastapi import Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi import APIRouter
+from starlette.middleware.sessions import SessionMiddleware
 # from models.note import Note
 from config.db import conn
 from schemas.note import noteEntity, notesEntity
@@ -14,15 +15,25 @@ templates = Jinja2Templates(directory = "templates")
 
 notes_collection = conn.notes.notes
 
+def is_authenticated(request:Request):
+    return request.session.get("user")
 
 #to get the notes
 @note.get("/",response_class = HTMLResponse)
 async def get_notes(request: Request, q:str = None, filter_important:bool = False,page:int = 1):
+    if not is_authenticated(request):
+        return RedirectResponse("/login", status_code=302)
+    
     per_page = 6
     skip_page = (page-1)*per_page
-    query ={}
+    query = {
+        "user_id": request.session.get("user_id")
+    }
     if q:
-        query["title"] = {"$regex": q, "$options": "i"}
+        query["$or"] = [
+            {"title": {"$regex": q, "$options": "i"}},
+            {"desc": {"$regex": q, "$options": "i"}}
+        ]
     if filter_important:
         query["important"] =True
     #sorting the results by the time created 
@@ -52,17 +63,31 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
 #to create a new note
 @note.post("/")
 async def create_note(request: Request):
+    if not is_authenticated(request):
+        return RedirectResponse("/login", status_code=302)
+    
     form = await request.form()
     formDict = dict(form)
     formDict["important"] = formDict.get("important") == "on"
     formDict["created_at"] = datetime.now(UTC)
+
+    formDict["user_id"] = request.session.get("user_id")
+    formDict["user_email"] = request.session.get("user")
+    
+    if not formDict.get("title"):
+        return RedirectResponse("/?error=MissingTitle", status_code=303)
     inserted_note = notes_collection.insert_one(formDict)
     return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
 
 #to delete the note
 @note.get("/delete/{id}")
-async def  delete_note(id: str):
-    notes_collection.delete_one({"_id": ObjectId(id)})
+async def  delete_note(request:Request, id: str):
+    if not is_authenticated(request):
+        return RedirectResponse("/login", status_code=302)
+    notes_collection.delete_one({
+        "_id": ObjectId(id),
+        "user_id":request.session.get("user_id")
+    })
     return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
 
 
@@ -70,6 +95,9 @@ async def  delete_note(id: str):
 #to update/edit the previously created note
 @note.get("/edit/{id}",response_class = HTMLResponse)
 async def edit_note(request: Request, id: str):
+    if not is_authenticated(request):
+        return RedirectResponse("/login", status_code=302)
+    
     note_found = notes_collection.find_one({"_id": ObjectId(id)})
     note_found = noteEntity(note_found)
     return templates.TemplateResponse(
@@ -85,6 +113,9 @@ async def edit_note(request: Request, id: str):
 
 @note.post("/edit/{id}")
 async def save_edited_note(request: Request, id:str):
+    if not is_authenticated(request):
+        return RedirectResponse("/login", status_code=302)
+
     form = await request.form()
     formDict = dict(form)
     formDict["important"] = True if formDict.get("important") == "on" else False
