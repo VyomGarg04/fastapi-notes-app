@@ -100,7 +100,7 @@ async def check_user(request: Request):
 
 
 #LOGOUT
-@user.get("/login", response_class = HTMLResponse)
+@user.get("/logout", response_class = HTMLResponse)
 async def user_login(request: Request):
     request.session.clear()
     return RedirectResponse("/login", status_code=302)

@@ -1,9 +1,9 @@
 from fastapi import Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi import APIRouter
-from starlette.middleware.sessions import SessionMiddleware
 # from models.note import Note
 from config.db import conn
+from utils.auth import get_current_user
 from schemas.note import noteEntity, notesEntity
 from fastapi.templating import Jinja2Templates
 import starlette.status as status
@@ -15,15 +15,14 @@ templates = Jinja2Templates(directory = "templates")
 
 notes_collection = conn.notes.notes
 
-def is_authenticated(request:Request):
-    return request.session.get("user")
 
 #to get the notes
 @note.get("/",response_class = HTMLResponse)
 async def get_notes(request: Request, q:str = None, filter_important:bool = False,page:int = 1):
-    if not is_authenticated(request):
+    current_user = get_current_user(request)
+    if not current_user:
         return RedirectResponse("/login", status_code=302)
-    
+
     per_page = 6
     skip_page = (page-1)*per_page
     query = {
@@ -63,9 +62,10 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
 #to create a new note
 @note.post("/")
 async def create_note(request: Request):
-    if not is_authenticated(request):
+    current_user = get_current_user(request)
+    if not current_user:
         return RedirectResponse("/login", status_code=302)
-    
+
     form = await request.form()
     formDict = dict(form)
     formDict["important"] = formDict.get("important") == "on"
@@ -82,8 +82,10 @@ async def create_note(request: Request):
 #to delete the note
 @note.get("/delete/{id}")
 async def  delete_note(request:Request, id: str):
-    if not is_authenticated(request):
+    current_user = get_current_user(request)
+    if not current_user:
         return RedirectResponse("/login", status_code=302)
+
     notes_collection.delete_one({
         "_id": ObjectId(id),
         "user_id":request.session.get("user_id")
@@ -95,10 +97,14 @@ async def  delete_note(request:Request, id: str):
 #to update/edit the previously created note
 @note.get("/edit/{id}",response_class = HTMLResponse)
 async def edit_note(request: Request, id: str):
-    if not is_authenticated(request):
+    current_user = get_current_user(request)
+    if not current_user:
         return RedirectResponse("/login", status_code=302)
     
-    note_found = notes_collection.find_one({"_id": ObjectId(id)})
+    note_found = notes_collection.find_one({
+        "_id": ObjectId(id),
+        "user_id":request.session.get("user_id")
+        })
     note_found = noteEntity(note_found)
     return templates.TemplateResponse(
         request=request,
@@ -113,14 +119,17 @@ async def edit_note(request: Request, id: str):
 
 @note.post("/edit/{id}")
 async def save_edited_note(request: Request, id:str):
-    if not is_authenticated(request):
+    current_user = get_current_user(request)
+    if not current_user:
         return RedirectResponse("/login", status_code=302)
 
     form = await request.form()
     formDict = dict(form)
     formDict["important"] = True if formDict.get("important") == "on" else False
-    notes_collection.update_one({"_id": ObjectId(id)}, {"$set": formDict})
+    notes_collection.update_one({
+        "_id": ObjectId(id),
+        "user_id":request.session.get("user_id")
+        },
+        {"$set": formDict}
+        )
     return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
-
-
-
