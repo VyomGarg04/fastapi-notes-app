@@ -45,10 +45,10 @@ Home
         {% endif %}
         <br>
         <div>
-          <a href="/delete/{{ note.id }}" class="btn btn-danger">
+          <a href="/notes/delete/{{ note.id }}" class="btn btn-danger">
               Delete
           </a>
-          <a href="/edit/{{ note.id }}" class="btn btn-secondary  ">
+          <a href="/notes/edit/{{ note.id }}" class="btn btn-secondary  ">
               Edit
           </a>
           <a>
@@ -75,7 +75,7 @@ Home
 
   {% if page > 1 %}
     <a
-      href="/?page={{ page - 1 }}
+      href="/notes/?page={{ page - 1 }}
       {% if q %}&q={{ q }}{% endif %}
       {% if filter_important %}&filter_important=true{% endif %}"
       class="btn btn-outline-primary"
@@ -88,7 +88,7 @@ Home
 
   {% if has_next%}
   <a
-    href="/?page={{ page + 1 }}
+    href="/notes/?page={{ page + 1 }}
     {% if q %}&q={{ q }}{% endif %}
     {% if filter_important %}&filter_important=true{% endif %}"
     class="btn btn-outline-primary"

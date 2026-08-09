@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}
+Landing Page
+{% endblock %}
+
+{% block styles %}
+    <!-- Bootstrap 5.3 CSS CDN -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- Bootstrap Icons CDN -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"> -->
+
+    <link rel="stylesheet" href="{{ url_for('static', path='css/landing.css') }}">
+{% endblock %}
+
+{% block content %}
+
+
+    <!-- Hero Section -->
+    <header id="hero" class="hero-section text-white text-center text-md-start">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-md-6">
+                    <h1 class="display-4 fw-bold mb-3 hero-text-main"">Where ideas connect and knowledge grows.</h1>
+                    <p class="lead mb-4 hero-text-sec"">Capture your thoughts, organize them intelligently, and rediscover them through meaningful connections.</p>
+                    <div class="d-grid gap-3 d-md-flex justify-content-md-start">
+                        <a href="/signup" class="btn btn-light btn-lg px-4 me-md-2 fw-bold hero-bnr-btn">🌱 Start Growing</a>
+                        <a href="#features" class="btn btn-outline-light btn-lg px-4">Explore MindGrove</a>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center">
+                    <i class="bi-journal text-black" style="font-size: 10rem;"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Why Choose MindGrove</h2>
+                <p class="text-muted">Engineered for speed, flexibility, and production-ready compliance.</p>
+            </div>
+            <div class="row g-4 py-3 row-cols-1 row-cols-md-3">
+                <div class="col d-flex align-items-start">
+                    <div class="feature-icon text-white me-3">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+                    <div>
+                        <h3 class="fs-4 fw-bold">Smart Notes</h3>
+                        <p class="text-muted">Optimized source structure ensures your layout scores high on search index parameters and retains incoming site traffic.</p>
+                    </div>
+                </div>
+                <div class="col d-flex align-items-start">
+                    <div class="feature-icon text-white me-3">
+                        <i class="bi bi-cpu-fill"></i>
+                    </div>
+                    <div>
+                        <h3 class="fs-4 fw-bold">Knowledge Connections</h3>
+                        <p class="text-muted">Built natively with fluid grids and utilities without relying on heavy external dependencies or frameworks.</p>
+                    </div>
+                </div>
+                <div class="col d-flex align-items-start">
+                    <div class="feature-icon text-white me-3">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div>
+                        <h3 class="fs-4 fw-bold">Semantic Search</h3>
+                        <p class="text-muted">Fluid elements adapt immediately across mobile display environments, tablets, and wide-screen workstations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!--How it Works-->
+    <section id="how_it_works" class="py-5 bg-light">
+        <div class="container">
+            <div class="row text-center justify-content-center mb-5">
+                <div class="col-xl-6 col-lg-8">
+                    <h2 class="font-weight-bold">How MindGrove Works</h2>
+                    <p class="text-muted">Engineered for speed, flexibility, and production-ready compliance.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <!-- Timeline Scroll Wrapper for Mobile Responsiveness -->
+                    <div class="timeline-scroll-container">
+                        <div class="timeline-steps">
+                            
+                            <!-- Step 1 -->
+                            <div class="timeline-step">
+                                <div class="timeline-content">
+                                    <div class="inner-circle">1</div>
+                                    <h5 class="mt-3 h6 font-weight-bold">Start Growing</h5>
+                                    <p class="text-muted mb-0 small">LogIn or SignUp if you are new to MindGrove and start planting seeds.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Step 2 -->
+                            <div class="timeline-step">
+                                <div class="timeline-content">
+                                    <div class="inner-circle">2</div>
+                                    <h5 class="mt-3 h6 font-weight-bold">Plant a Seed</h5>
+                                    <p class="text-muted mb-0 small">Create your first note and plant the first seed in your knowledge grove.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Step 3 -->
+                            <div class="timeline-step">
+                                <div class="timeline-content">
+                                    <div class="inner-circle">3</div>
+                                    <h5 class="mt-3 h6 font-weight-bold">Let us Build your Grove</h5>
+                                    <p class="text-muted mb-0 small">Start growing seeds (create new notes) and let us organize them for you into a Grove.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Step 4 -->
+                            <div class="timeline-step">
+                                <div class="timeline-content">
+                                    <div class="inner-circle">4</div>
+                                    <h5 class="mt-3 h6 font-weight-bold">Rediscover</h5>
+                                    <p class="text-muted mb-0 small">Search your forgotten notes just by typing related keywords into the searchbar.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </section>
+    
+
+
+
+    <!-- Roadmap-->
+     <section id="roadmap" class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Roadmap</h2>
+                <p class="text-muted">MindGrove future plans and features.</p>
+            </div>
+            <div class="row g-4 py-3 row-cols-1 row-cols-md-3">
+                <div class="col d-flex align-items-start">
+                    <div class="feature-icon text-white me-3">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+                    <div>
+                        <h3 class="fs-4 fw-bold">Semantic Search</h3>
+                        <p class="text-muted">---------</p>
+                    </div>
+                </div>
+                <div class="col d-flex align-items-start">
+                    <div class="feature-icon text-white me-3">
+                        <i class="bi bi-cpu-fill"></i>
+                    </div>
+                    <div>
+                        <h3 class="fs-4 fw-bold">Knowledge Graph</h3>
+                        <p class="text-muted">--------------</p>
+                    </div>
+                </div>
+                <div class="col d-flex align-items-start">
+                    <div class="feature-icon text-white me-3">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div>
+                        <h3 class="fs-4 fw-bold">AI Categorization</h3>
+                        <p class="text-muted">----------</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container py-5">
+            <div class="row g-4 py-3 row-cols-1 row-cols-md-3">
+                <div class="col d-flex align-items-start">
+                    <div class="feature-icon text-white me-3">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+                    <div>
+                        <h3 class="fs-4 fw-bold">Daily Learning Review</h3>
+                        <p class="text-muted">---------</p>
+                    </div>
+                </div>
+                <div class="col d-flex align-items-start">
+                    <div class="feature-icon text-white me-3">
+                        <i class="bi bi-cpu-fill"></i>
+                    </div>
+                    <div>
+                        <h3 class="fs-4 fw-bold">Role-based Groves</h3>
+                        <p class="text-muted">--------------</p>
+                    </div>
+                </div>
+                <div class="col d-flex align-items-start">
+                    <div class="feature-icon text-white me-3">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div>
+                        <h3 class="fs-4 fw-bold">Offline Mode</h3>
+                        <p class="text-muted">----------</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+     
+
+
+    <!-- Call to Action Section -->
+    <section id="cta" class="py-5 bg-dark text-white text-center">
+        <div class="container py-4">
+            <h2 class="display-5 fw-bold mb-3">Start building your own digital grove today.</h2>
+            <div class="col-lg-6 mx-auto">
+                <p class="lead mb-4 text-secondary">Join thousands of creators building responsive layouts seamlessly with our verified components.</p>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <button type="button" class="btn hero-btn btn-lg px-4 gap-3">Create Free Account</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    
+
+    <!-- Footer -->
+    <footer class="py-1 bg-white border-top">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center">
+            <p class="col-md-4 mb-0 text-muted">MindGrove</p>
+            <p class="col-md-4 mb-0 text-muted">Built with ❤️ using FastAPI and Bootstrap</p>
+            <ul class="nav col-md-4 justify-content-end text-muted">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Privacy Policy</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Terms of Use</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5.3 JavaScript Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

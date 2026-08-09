@@ -1,6 +1,5 @@
-from fastapi import Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 # from models.note import Note
 from config.db import conn
 from utils.auth import get_current_user
@@ -17,7 +16,7 @@ notes_collection = conn.notes.notes
 
 
 #to get the notes
-@note.get("/",response_class = HTMLResponse)
+@note.get("/notes",response_class = HTMLResponse)
 async def get_notes(request: Request, q:str = None, filter_important:bool = False,page:int = 1):
     current_user = get_current_user(request)
     if not current_user:
@@ -55,12 +54,12 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
             "show_navbar":True,
             "use_container": True
             }
-    )
+        )
         
         
 
 #to create a new note
-@note.post("/")
+@note.post("/notes")
 async def create_note(request: Request):
     current_user = get_current_user(request)
     if not current_user:
@@ -77,10 +76,10 @@ async def create_note(request: Request):
     if not formDict.get("title"):
         return RedirectResponse("/?error=MissingTitle", status_code=303)
     inserted_note = notes_collection.insert_one(formDict)
-    return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)
 
 #to delete the note
-@note.get("/delete/{id}")
+@note.get("/notes/delete/{id}")
 async def  delete_note(request:Request, id: str):
     current_user = get_current_user(request)
     if not current_user:
@@ -90,12 +89,12 @@ async def  delete_note(request:Request, id: str):
         "_id": ObjectId(id),
         "user_id":request.session.get("user_id")
     })
-    return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)
 
 
 
 #to update/edit the previously created note
-@note.get("/edit/{id}",response_class = HTMLResponse)
+@note.get("/notes/edit/{id}",response_class = HTMLResponse)
 async def edit_note(request: Request, id: str):
     current_user = get_current_user(request)
     if not current_user:
@@ -117,7 +116,7 @@ async def edit_note(request: Request, id: str):
             }
         )
 
-@note.post("/edit/{id}")
+@note.post("/notes/edit/{id}")
 async def save_edited_note(request: Request, id:str):
     current_user = get_current_user(request)
     if not current_user:
@@ -132,4 +131,4 @@ async def save_edited_note(request: Request, id:str):
         },
         {"$set": formDict}
         )
-    return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)

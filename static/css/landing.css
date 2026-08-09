@@ -1,0 +1,121 @@
+:root {
+  --primary-green: #2D6A4F;
+  --dark-green: #1B4332;
+  --background: #f8f9fa;
+  --text: #212529;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 80%);
+    padding: 100px 0;
+}
+
+.hero-btn {
+    background: linear-gradient(135deg,var(--primary-green), #6b9481);
+    background-size: 200% 200%;
+    color: #fff;
+    border: none;
+    transition: all 0.4s ease;          
+}
+.hero-btn:hover {
+    background-position: right center;
+    opacity: 0.9;   
+}
+.hero-bnr-btn {
+    background: linear-gradient(135deg, var(--primary-green), #52B788); /* deep → lighter green */
+    background-size: 200% 200%;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    transition: all 0.4s ease; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);          
+}
+.hero-bnr-btn:hover {
+    background-position: right center;
+    opacity: 0.95;
+    transform: translateY(-2px);     
+}
+.hero-logo{
+    color :var(--primary-green);
+}
+.hero-text-main{
+    color:#F8F9FA
+}
+.hero-text-sec{
+    color:#E9ECEF
+}
+.feature-icon{
+    background-color: var(--primary-green); 
+    color: #fff; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    width: 3rem;
+    font-size: 1.5rem;
+    border-radius: .75rem;
+}
+
+
+/* Landing Page how it works */
+
+/* Custom Horizontal Timeline Styling */
+.timeline-steps {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.timeline-steps .timeline-step {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin: 0 1.5rem;
+    min-width: 200px;
+}
+
+/* The horizontal connecting line */
+.timeline-steps .timeline-step:not(:last-child)::after {
+    content: "";
+    display: block;
+    border-top: 3px dashed var(--dark-green); 
+    position: absolute;
+    left: 50%;
+    top: 28px; 
+    z-index: 1;
+}
+
+/* Timeline step icon/circle wrapper */
+.timeline-steps .timeline-content {
+    width: 100%;
+    text-align: center;
+}
+
+.timeline-steps .inner-circle {
+    border-radius: 50%;
+    background-color: var(--dark-green);
+    height: 56px;
+    width: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    z-index: 2;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Optional scroll container wrapper for smaller devices */
+@media (max-width: 991.98px) {
+    .timeline-scroll-container {
+        overflow-x: auto;
+        padding-bottom: 1.5rem;
+        justify-content: flex-start !important;
+    }
+    .timeline-steps {
+        justify-content: flex-start;
+    }
+}   

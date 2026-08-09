@@ -29,7 +29,7 @@ async def user_signup(request: Request):
 async def create_user(request: Request):
     form = await request.form()
     formDict = dict(form)
-    username = formDict.get("username")
+    name = formDict.get("name")
     email = formDict.get("email")
     password = formDict.get("password")
     confirm_password = formDict.get("confirm_password")
@@ -48,7 +48,7 @@ async def create_user(request: Request):
     hashed_password = create_hash(password)
 
     new_user = {
-        "username":formDict["username"],
+        "name":formDict["name"],
         "email": formDict["email"],
         "password": hashed_password
 
