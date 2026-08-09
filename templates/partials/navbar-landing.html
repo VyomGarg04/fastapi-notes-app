@@ -1,7 +1,21 @@
 <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top shadow-sm py-3">
     <div class="container">
       <!-- Brand/Logo -->
-      <a class="navbar-brand fw-bold fs-4 hero-logo" href="#">MindGrove</a>
+       <div class="logo-wrapper">
+          <a
+            class="navbar-brand d-flex align-items-center gap-2"
+            href="/"
+            aria-label="MindGrove home"
+          >
+            <img
+              src="{{ url_for('static', path='images/logo.svg') }}"
+              alt="MindGrove logo"
+              class="mg-brand-logo"
+            >
+            <span class="mg-brand-name">MindGrove</span>
+          </a>
+        </div>
+
 
       <!-- Mobile Hamburger Menu Button -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#landingNavbar" aria-controls="landingNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,7 +25,7 @@
       <!-- Collapsible Navbar Content -->
       <div class="collapse navbar-collapse" id="landingNavbar">
         <!-- Centered Links -->
-        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-medium">
+        <ul class="navbar-nav mx-auto mb-3 mb-lg-0 fw-medium" style="gap: 2rem;">
           <li class="nav-item">
             <a class="nav-link" href="#features">Features</a>
           </li>

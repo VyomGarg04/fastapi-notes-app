@@ -5,6 +5,27 @@
   --text: #212529;
 }
 
+.mg-brand-logo {
+  height: 50px;  
+  width: auto;   
+}
+
+.mg-brand-name {
+  font-size: 1.25rem;  
+  font-weight: 600;
+  color: var(--primary-green);
+}
+
+.logo-wrapper {
+  margin-left: -80px; 
+}
+
+@media (min-width: 992px) {
+  .mg-brand-logo {
+    height: 42px; 
+  }
+}
+
 .hero-section {
     background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 80%);
     padding: 100px 0;
@@ -55,6 +76,7 @@
     font-size: 1.5rem;
     border-radius: .75rem;
 }
+
 
 
 /* Landing Page how it works */
