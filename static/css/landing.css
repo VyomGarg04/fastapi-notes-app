@@ -28,7 +28,9 @@
 
 .hero-section {
     background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 80%);
-    padding: 100px 0;
+    padding: 150px 0;
+    position: relative;
+    overflow: hidden;
 }
 
 .hero-btn {
@@ -56,8 +58,41 @@
     opacity: 0.95;
     transform: translateY(-2px);     
 }
-.hero-logo{
-    color :var(--primary-green);
+.hero-logo {
+    position: absolute;
+
+    /* Controls how much of the logo is pushed outside */
+    right: -300px;
+
+    /* Vertically center the logo */
+    top: 30%;
+    transform: translateY(-30%);
+
+    /* Make it large without affecting hero height */
+    height: 1000px;
+    width: auto;
+
+    object-fit: contain;
+    opacity: 1.0;
+
+    pointer-events: none;
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+    .hero-logo {
+        height: 850px;
+        right: -300px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 991.98px) {
+    .hero-logo {
+        height: 500px;
+        right: -180px;
+        opacity: 0.18;
+    }
 }
 .hero-text-main{
     color:#F8F9FA
