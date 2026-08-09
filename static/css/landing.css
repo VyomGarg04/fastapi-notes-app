@@ -28,7 +28,7 @@
 
 .hero-section {
     background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 80%);
-    padding: 150px 0;
+    padding: 160px 0;
     position: relative;
     overflow: hidden;
 }
@@ -58,6 +58,7 @@
     opacity: 0.95;
     transform: translateY(-2px);     
 }
+
 .hero-logo {
     position: absolute;
 
@@ -73,8 +74,8 @@
     width: auto;
 
     object-fit: contain;
-    opacity: 1.0;
-
+    opacity: 0.07;
+    filter: invert(100%) grayscale(100%) brightness(80%);
     pointer-events: none;
 }
 
@@ -136,11 +137,11 @@
 /* The horizontal connecting line */
 .timeline-steps .timeline-step:not(:last-child)::after {
     content: "";
-    display: block;
-    border-top: 3px dashed var(--dark-green); 
     position: absolute;
-    left: 50%;
-    top: 28px; 
+    top: 26px;                /* aligns with circle center */
+    left: 60%;               /* start at the right edge of the step */
+    width: 15rem;              /* length of connector, adjust as needed */
+    border-top: 3px dashed var(--dark-green);
     z-index: 1;
 }
 
