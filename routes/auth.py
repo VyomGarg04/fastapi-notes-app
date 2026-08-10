@@ -49,9 +49,8 @@ async def create_user(request: Request):
 
     new_user = {
         "name":formDict["name"],
-        "email": formDict["email"],
+        "email": formDict["email"].lower(),
         "password": hashed_password
-
     }
     user_collection.insert_one(new_user)
     return RedirectResponse(url = "/login?msg=AccountCreated", status_code=status.HTTP_303_SEE_OTHER)
@@ -93,7 +92,7 @@ async def check_user(request: Request):
     if user_exists:
         request.session["user"] = email
         request.session["user_id"] = str(user["_id"])
-        return RedirectResponse(url = "/", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)
     else:
         return RedirectResponse(url = "/login?msg=LoginUnsuccessful", status_code=status.HTTP_303_SEE_OTHER)
     

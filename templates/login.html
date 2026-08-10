@@ -1,33 +1,89 @@
 {% extends "base.html" %}
 
 {% block title %}
-Login
+Login | MindGrove
 {% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', path='css/auth.css') }}">
+<!-- Ensure you bump the version number to break the cache again! -->
+<link rel="stylesheet" href="{{ url_for('static', path='css/auth.css') }}?v=2.0">
 {% endblock %}
 
 {% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        
+        <!-- Brand Side -->
+        <div class="auth-brand-side">
+            <div>
+                <div class="brand-icon-wrapper">
+                    <!-- Uses a bootstrap icon to match your landing page style -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-tree-fill" viewBox="0 0 16 16">
+                      <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.739A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.761L10.902 5.5H11a.5.5 0 0 0 .416-.777z"/>
+                    </svg>
+                </div>
+                <h2>Welcome Back</h2>
+                <p>Log in to access your notes, rediscover forgotten ideas, and continue cultivating your digital grove.</p>
+            </div>
+            <div class="mt-4">
+                <small class="text-white-50">© MindGrove</small>
+            </div>
+        </div>
 
-<div class="auth-page">
-    <div class="auth-container">
-        <h2>Login</h2>
-        <form action="#" method="post">
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        <!-- Form Side -->
+        <div class="auth-form-side">
+            <h3>Sign In</h3>
+            <p class="text-muted">Enter your credentials to access your account.</p>
+
+            {% if error %}
+            <div class="auth-message error-message">
+                {{ error }}
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter password" minlength="6" required>
+            {% endif %}
+
+            {% if success %}
+            <div class="auth-message success-message">
+                {{ success }}
             </div>
-            <button type="submit">Login</button>
-            <div class="login-link">
-                Don’t have an account? <a href="/signup">Sign Up</a>
+            {% endif %}
+
+            <form action="/login" method="post" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="name@example.com" 
+                        autocomplete="email" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password" 
+                        minlength="6" 
+                        autocomplete="current-password" 
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="mg-btn-primary w-100 mt-3 border-0">
+                    Login securely
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <span>Don't have an account?</span>
+                <a href="/signup">Start Growing</a>
             </div>
-        </form>
+        </div>
+
     </div>
 </div>
-
 {% endblock %}

@@ -1,42 +1,117 @@
 {% extends "base.html" %}
 
 {% block title %}
-Signup
+Create Account | MindGrove
 {% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', path='css/auth.css') }}">
+<!-- Ensure you bump the version number to break the cache again! -->
+<link rel="stylesheet" href="{{ url_for('static', path='css/auth.css') }}?v=2.0">
 {% endblock %}
 
 {% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        
+        <!-- Brand Side -->
+        <div class="auth-brand-side">
+            <div>
+                <div class="brand-icon-wrapper">
+                    <!-- Custom Sprout / Seedling Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                        <!-- Left Leaf (Slightly transparent for a layered effect) -->
+                        <path opacity="0.75" d="M12 22C12 22 12 16 7 11C2.93 6.93 2 2 2 2C2 2 6.93 2.93 11 7C16 12 12 22 12 22Z" />
+                        <!-- Right Leaf -->
+                        <path d="M12 22C12 22 12 16 17 11C21.07 6.93 22 2 22 2C22 2 17.07 2.93 13 7C8 12 12 22 12 22Z" />
+                    </svg>
+                </div>
+                <h2>Plant a Seed</h2>
+                <p>Join thousands of creators capturing their thoughts and organizing them intelligently. Let's build your knowledge graph together.</p>
+            </div>
+            <div class="mt-4">
+                <small class="text-white-50">© MindGrove</small>
+            </div>
+        </div>
 
-<div class="auth-page">
-    <div class="auth-container">
-        <h2>Create Account</h2>
-        <form action="/notes" method="post">
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="Enter your user name" required>
+        <!-- Form Side -->
+        <div class="auth-form-side">
+            <h3>Create Account</h3>
+            <p class="text-muted">Set up your free account and start exploring.</p>
+
+            {% if error %}
+            <div class="auth-message error-message">
+                {{ error }}
             </div>
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            {% endif %}
+
+            {% if success %}
+            <div class="auth-message success-message">
+                {{ success }}
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter password" minlength="6" required>
+            {% endif %}
+
+            <form action="/signup" method="post" class="auth-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        placeholder="John Doe" 
+                        autocomplete="name" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="name@example.com" 
+                        autocomplete="email" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Create a strong password" 
+                        minlength="6" 
+                        autocomplete="new-password" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        id="confirm_password" 
+                        name="confirm_password" 
+                        placeholder="Re-enter your password" 
+                        minlength="6" 
+                        autocomplete="new-password" 
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="mg-btn-primary w-100 mt-3 border-0">
+                    Create Free Account
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <span>Already have an account?</span>
+                <a href="/login">Log in here</a>
             </div>
-            <div class="form-group">
-                <label for="confirm-password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm password" minlength="6" required>
-            </div>
-            <button type="submit">Sign Up</button>
-            <div class="login-link">
-                Already have an account? <a href="/login">Login</a>
-            </div>
-        </form>
+        </div>
+
     </div>
 </div>
-
-
 {% endblock %}
