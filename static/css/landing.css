@@ -16,13 +16,21 @@
   color: var(--primary-green);
 }
 
-.logo-wrapper {
-  margin-left: -80px; 
-}
-
+/* .logo-wrapper {
+  
+} */
+/* Desktop */
 @media (min-width: 992px) {
   .mg-brand-logo {
     height: 42px; 
+    margin-left: -80px; 
+  }
+}
+/* Mobile */
+@media (min-width: 991.98px) {
+  .mg-brand-logo {
+    height: 42px; 
+    margin-left: -10px; 
   }
 }
 
@@ -91,7 +99,7 @@
 @media (max-width: 991.98px) {
     .hero-logo {
         height: 500px;
-        right: -180px;
+        right: -80px;
         opacity: 0.18;
     }
 }
