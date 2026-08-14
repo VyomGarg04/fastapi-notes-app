@@ -35,6 +35,7 @@
        ========================= */
 
     --mg-danger: #dc3545;
+    --mg-danger-light: #df989f;
     --mg-warning: #f4a261;
 
     /* =========================
@@ -225,6 +226,13 @@ a:hover {
     color: var(--mg-text-secondary);
 }
 
+.text-danger {
+    color: var(--mg-danger);
+}
+.text-danger:hover {
+    background-color: var(--mg-danger-light);
+    color: var(--mg-danger);
+}
 
 /* =========================
    Cards

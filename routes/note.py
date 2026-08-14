@@ -44,6 +44,7 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
     newDocs = notesEntity(results)
 
     user_name = request.session.get("user_name")
+    first_name = user_name.split(" ")[0] if user_name else "User"
     greeting = get_greeting()
 
 
@@ -60,7 +61,8 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
             "show_navbar":True,
             "use_container": False,
             "greeting": greeting,
-            "user_name": user_name
+            "user_name": user_name,
+            "first_name": first_name,
             }
         )
         
