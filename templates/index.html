@@ -4,25 +4,54 @@
 Home
 {% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
+{% endblock %}
+
+
+
+
 {% block content %}
-
-
-<form method="POST">
-  <div class="mb-3">
-      <label for="note_title" class="form-label">Note Title</label>
-      <input type="text" class="form-control" id="note_title" name="title" aria-describedby="titleHelp">
-      <div id="titleHelp" class="form-text">Keep it crisp and meaningful.</div>
-  </div>
-  <div class="mb-3">
-      <label for="note_desc" class="form-label">Note Description</label>
-      <input type="text" class="form-control" id="note_desc" name="desc">
-  </div>
-  <div class="mb-3 form-check">
-      <input type="checkbox" class="form-check-input" id="important" name="important">
-      <label class="form-check-label" for="important">Is the note IMPORTANT?</label>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form> 
+<section id="hero" class="hero-section text-white text-center text-md-start">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-md-6">
+                <h1 class="display-6 fw-bold mb-3 hero-text-main">
+                    {{ greeting }}{% if user_name %}, {{ user_name }}{% endif %}!
+                </h1>
+                <p class="lead mb-4 hero-text-sec">
+                    Capture your thoughts, organize them intelligently, and rediscover them through meaningful connections.
+                </p>
+                <div class="d-grid gap-3 d-md-flex justify-content-md-start">
+                    <a href="/signup" class="btn btn-light btn-lg px-4 me-md-2 fw-bold hero-bnr-btn">🌱 Start Growing</a>
+                    <a href="#features" class="btn btn-outline-light btn-lg px-4">Explore MindGrove</a>
+                </div>
+            </div>
+            <div class="col-md-6 text-center">
+                <img src="{{ url_for('static', path='images/logo.svg') }}" alt="MindGrove" class="hero-logo">
+            </div>
+        </div>
+    </div>
+</section>
+<br><br>
+<section id="notes" class="container mt-1">
+  <form method="POST">
+    <div class="mb-3">
+        <label for="note_title" class="form-label">Note Title</label>
+        <input type="text" class="form-control" id="note_title" name="title" aria-describedby="titleHelp">
+        <div id="titleHelp" class="form-text">Keep it crisp and meaningful.</div>
+    </div>
+    <div class="mb-3">
+        <label for="note_desc" class="form-label">Note Description</label>
+        <input type="text" class="form-control" id="note_desc" name="desc">
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="important" name="important">
+        <label class="form-check-label" for="important">Is the note IMPORTANT?</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form> 
+</section>
 <br><br>
 {% if newDocs %}
 <h2>Your Notes</h2>

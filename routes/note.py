@@ -3,6 +3,7 @@ from fastapi import APIRouter, Request
 # from models.note import Note
 from config.db import conn
 from utils.auth import get_current_user
+from utils.greeting import get_greeting
 from schemas.note import noteEntity, notesEntity
 from fastapi.templating import Jinja2Templates
 import starlette.status as status
@@ -41,6 +42,11 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
     has_next = page * per_page < total_notes
     
     newDocs = notesEntity(results)
+
+    user_name = request.session.get("user_name")
+    greeting = get_greeting()
+
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -52,7 +58,9 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
             "page":page,
             "has_next":has_next,
             "show_navbar":True,
-            "use_container": True
+            "use_container": False,
+            "greeting": greeting,
+            "user_name": user_name
             }
         )
         

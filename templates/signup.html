@@ -5,8 +5,7 @@ Create Account | MindGrove
 {% endblock %}
 
 {% block styles %}
-<!-- Ensure you bump the version number to break the cache again! -->
-<link rel="stylesheet" href="{{ url_for('static', path='css/auth.css') }}?v=2.0">
+<link rel="stylesheet" href="{{ url_for('static', path='css/auth.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -55,8 +54,8 @@ Create Account | MindGrove
                     <label for="name">Full Name</label>
                     <input 
                         type="text" 
-                        id="name" 
-                        name="name" 
+                        id="user_name" 
+                        name="user_name" 
                         placeholder="John Doe" 
                         autocomplete="name" 
                         required

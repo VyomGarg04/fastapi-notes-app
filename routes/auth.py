@@ -29,7 +29,7 @@ async def user_signup(request: Request):
 async def create_user(request: Request):
     form = await request.form()
     formDict = dict(form)
-    name = formDict.get("name")
+    user_name = formDict.get("user_name")
     email = formDict.get("email")
     password = formDict.get("password")
     confirm_password = formDict.get("confirm_password")
@@ -48,7 +48,7 @@ async def create_user(request: Request):
     hashed_password = create_hash(password)
 
     new_user = {
-        "name":formDict["name"],
+        "user_name":formDict["user_name"],
         "email": formDict["email"].lower(),
         "password": hashed_password
     }
@@ -92,6 +92,7 @@ async def check_user(request: Request):
     if user_exists:
         request.session["user"] = email
         request.session["user_id"] = str(user["_id"])
+        request.session["user_name"] = user["user_name"]
         return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)
     else:
         return RedirectResponse(url = "/login?msg=LoginUnsuccessful", status_code=status.HTTP_303_SEE_OTHER)
