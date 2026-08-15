@@ -48,7 +48,7 @@ Home
         <label for="note_desc" class="form-label">Note Description</label>
         <input type="text" class="form-control" id="note_desc" name="desc">
     </div>
-    <div class="mb-3 form-check">
+    <div class="mb-3 form-check px-4">
         <input type="checkbox" class="form-check-input" id="important" name="important">
         <label class="form-check-label" for="important">Is the note IMPORTANT?</label>
     </div>
@@ -58,7 +58,7 @@ Home
 </section>
 
 <br>
-<hr>
+<hr class="hr-line">
 <br>
 
 <section id="search_notes" class="container mt-3">
@@ -125,63 +125,71 @@ Home
 <br><br>
 
 
-<section id="notes" class="container mt-1">
-{% if newDocs %}
-<h2 id="notes-display">Your Notes</h2>
-  {% if q and filter_important %}
-  <h4>Showing important results for {{ q }} </h4>
-  {% elif filter_important %}
-  <h4>Showing important notes</h4>
-  {% elif q %}
-  <h4>Showing results for {{ q }} </h4>
-{% endif %}
-<br>
-<div id="notes-container" class="row g-3">
-  {% for note in newDocs %}
-    <div class="col-md-4">
-      <div class="card p-3">
-        <h4>{{ note.title }}</h4>
-        <p>{{ note.desc }}</p>
-        {% if note.important %}
-          <span class="badge bg-danger">Important</span>
-        {% endif %}
-        <br>
-        <div>
-          <a href="/notes/delete/{{ note.id }}" class="btn btn-danger">
-              Delete
-          </a>
-          <a href="/notes/edit/{{ note.id }}" class="btn btn-secondary  ">
-              Edit
-          </a>
-          <a>
-            {% if note.created_at %}
-            <h6>{{ note.created_at }}</h6>
-            {% endif %}
-          </a>
+<section id="notes" class="container mt-4">
+  {% if newDocs %}
+    <h2 id="notes-display" class="mb-3 fw-bold text-success">Your Notes</h2>
+
+    <!-- Context heading -->
+    {% if q and filter_important %}
+      <h5 class="text-muted">Showing <span class="text-danger">important</span> results for <strong>{{ q }}</strong></h5>
+    {% elif filter_important %}
+      <h5 class="text-muted">Showing <span class="text-danger">important</span> notes</h5>
+    {% elif q %}
+      <h5 class="text-muted">Showing results for <strong>{{ q }}</strong></h5>
+    {% endif %}
+
+    <div id="notes-container" class="row g-4 mt-3">
+      {% for note in newDocs %}
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <h4 class="card-title">{{ note.title }}</h4>
+              <p class="card-text">{{ note.desc }}</p>
+
+               <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="btn-group">
+                  <a href="/notes/edit/{{ note.id }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-pencil"></i> Edit
+                  </a>
+                  <a href="/notes/delete/{{ note.id }}" class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-trash"></i> Delete
+                  </a>
+                </div>
+                {% if note.created_at %}
+                  <small class="text-muted">{{ note.created_at }}</small>
+                {% endif %}
+              </div>
+                <div>
+                  {% if note.important %}
+                    <span class="badge bg-danger mb-2">Important</span>
+                  {% endif %}
+                </div>
+            </div>
+          </div>
         </div>
-      </div>
+      {% endfor %}
     </div>
-  {% endfor %}
 
   {% else %}
-    {% if q %}
-    <h3 id="notes-display">No matching notes found.</h3>
-    {% else %}
-    <h3 id="notes-display">No notes to display!</h3>
-    {% endif %}
+    <div class="alert alert-info mt-3" id="notes-display">
+      {% if q %}
+        No matching notes found.
+      {% else %}
+        No notes to display!
+      {% endif %}
+    </div>
   {% endif %}
-</div>
 </section>
 
 
-<div class="d-flex justify-content-center align-items-center gap-3 mt-4">
+<div class="d-flex justify-content-center align-items-center gap-3 mt-2">
 
   {% if page > 1 %}
     <a
       href="/notes/?page={{ page - 1 }}
       {% if q %}&q={{ q }}{% endif %}
       {% if filter_important %}&filter_important=true{% endif %}"
-      class="btn btn-outline-primary"
+      class="btn mg-btn-outline"
     >
       <- Previous
     </a>
@@ -194,12 +202,12 @@ Home
     href="/notes/?page={{ page + 1 }}
     {% if q %}&q={{ q }}{% endif %}
     {% if filter_important %}&filter_important=true{% endif %}"
-    class="btn btn-outline-primary"
+    class="btn mg-btn-outline"
   >
     Next ->
   </a>
   {% else %}
-  <button class="btn btn-outline-primary" disabled> Next -> </button>
+  <button class="btn btn-outline" disabled> Next -> </button>
   {% endif %}
 
 </div>

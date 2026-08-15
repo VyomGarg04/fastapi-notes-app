@@ -190,9 +190,16 @@ a:hover {
     box-shadow: var(--mg-shadow-sm);
 }
 
+.mg-btn-outline:disabled,
+.mg-btn-outline.disabled {
+  background: transparent;
+  border-color: var(--mg-border);
+  color: var(--mg-text-light);
 
-
-
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
 
 /* =========================
    Utility
@@ -234,6 +241,29 @@ a:hover {
 .text-danger:hover {
     background-color: var(--mg-danger-light);
     color: var(--mg-danger);
+}
+
+/* Headings or highlighted text inside cards */
+.card-title {
+  color: var(--mg-primary);        
+  font-weight: 600;                 
+  letter-spacing: 0.5px;          
+}
+
+
+.card-text {
+  color: var(--mg-text-secondary); 
+  font-size: 0.95rem;               
+  line-height: 1.5;               
+  margin-bottom: 0.75rem;    
+}
+
+
+.hr-line {
+  border: none;                       
+  height: 1px;                        
+  background-color: var(--mg-primary);
+  margin: 1rem 0;                  
 }
 
 /* =========================
