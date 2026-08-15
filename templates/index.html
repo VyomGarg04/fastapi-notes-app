@@ -19,11 +19,11 @@ Home
                     {{ greeting }}{% if user_name %}, {{ user_name }}{% endif %}!
                 </h1>
                 <p class="lead mb-4 hero-text-sec">
-                    Capture your thoughts, organize them intelligently, and rediscover them through meaningful connections.
+                    Your knowledge grove is growing.
                 </p>
                 <div class="d-grid gap-3 d-md-flex justify-content-md-start">
-                    <a href="/signup" class="btn btn-light btn-lg px-4 me-md-2 fw-bold hero-bnr-btn">🌱 Start Growing</a>
-                    <a href="#features" class="btn btn-outline-light btn-lg px-4">Explore MindGrove</a>
+                    <a href="#notes" class="btn btn-light btn-lg px-4 me-md-2 fw-bold hero-bnr-btn">🫘 Plant a Seed</a>
+                    <!-- <a href="#features" class="btn btn-outline-light btn-lg px-4">Explore MindGrove</a> -->
                 </div>
             </div>
             <div class="col-md-6 text-center">
@@ -32,8 +32,12 @@ Home
         </div>
     </div>
 </section>
+
 <br><br>
+
 <section id="notes" class="container mt-1">
+<h2>Create New Note</h2>
+<br>
   <form method="POST">
     <div class="mb-3">
         <label for="note_title" class="form-label">Note Title</label>
@@ -48,12 +52,82 @@ Home
         <input type="checkbox" class="form-check-input" id="important" name="important">
         <label class="form-check-label" for="important">Is the note IMPORTANT?</label>
     </div>
+    <br>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form> 
 </section>
+
+<br>
+<hr>
+<br>
+
+<section id="search_notes" class="container mt-3">
+  <form action="notes" method="get" class="d-flex align-items-end">
+    
+    <!-- Search Input -->
+    <div class="flex-grow-1 me-2">
+      <h4><label for="search_note" class="form-label">Search Notes</label></h4>
+      <input 
+        type="text" 
+        class="form-control py-2" 
+        id="search_note" 
+        name="search" 
+        placeholder="Search in your Knowledge..."
+      >
+    </div>
+
+    <!-- Filter Dropdown -->
+    <div class="dropdown me-2">
+      <button class="btn mg-btn-outline d-flex align-items-center py-2 px-3" 
+              type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-funnel"></i>
+        {% set selected_filters = 0 %}
+        {% if filter_important %}{% set selected_filters = selected_filters + 1 %}{% endif %}
+        {% if filter_recent %}{% set selected_filters = selected_filters + 1 %}{% endif %}
+        {% if filter_archived %}{% set selected_filters = selected_filters + 1 %}{% endif %}
+
+        {% if selected_filters > 0 %}
+          <span id="filterBadge" class="badge bg-danger ms-2">{{ selected_filters }}</span>
+        {% endif %}
+      </button>
+
+      <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="filterDropdown" style="min-width:200px;" data-bs-auto-close="outside">
+        <h6 class="dropdown-header">Filters</h6>
+        <div class="form-check">
+          <input class="form-check-input filter-checkbox" type="checkbox" id="filterImportant">
+          <label class="form-check-label" for="filterImportant">Important Only</label>
+          <input type="checkbox" 
+            class="form-check-input" 
+            id="filter_important"
+            name="filter_important"
+            value = "true"
+            {% if filter_important %}checked{% endif %}>
+        </div>
+        <div class="form-check mt-2">
+          <input class="form-check-input filter-checkbox" type="checkbox" id="filterRecent">
+          <label class="form-check-label" for="filterRecent">Recent Notes</label>
+        </div>
+        <div class="form-check mt-2">
+          <input class="form-check-input filter-checkbox" type="checkbox" id="filterArchived">
+          <label class="form-check-label" for="filterArchived">Archived</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Button -->
+    <div>
+      <button type="submit" class="btn btn-primary py-2 px-4" formaction="#notes-display">Search</button>
+    </div>
+  </form>
+</section>
+
+
 <br><br>
+
+
+<section id="notes" class="container mt-1">
 {% if newDocs %}
-<h2>Your Notes</h2>
+<h2 id="notes-display">Your Notes</h2>
   {% if q and filter_important %}
   <h4>Showing important results for {{ q }} </h4>
   {% elif filter_important %}
@@ -91,12 +165,13 @@ Home
 
   {% else %}
     {% if q %}
-    <h3>No matching notes found.</h3>
+    <h3 id="notes-display">No matching notes found.</h3>
     {% else %}
-    <h3>No notes to display!</h3>
+    <h3 id="notes-display">No notes to display!</h3>
     {% endif %}
   {% endif %}
 </div>
+</section>
 
 
 <div class="d-flex justify-content-center align-items-center gap-3 mt-4">

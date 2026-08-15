@@ -128,12 +128,12 @@ a:hover {
     justify-content: center;
     gap: 8px;
 
-    background: var(--mg-primary);
+    background: var(--mg-primary-light);
     border: 1px solid var(--mg-primary);
 
     color: #ffffff;
 
-    border-radius: var(--mg-radius-pill);
+    border-radius: var(--mg-radius-sm);
 
     padding: 11px 22px;
 
@@ -163,33 +163,35 @@ a:hover {
     justify-content: center;
     gap: 8px;
 
-    background: transparent;
-    border: 1px solid var(--mg-border);
+    background: var(--mg-bg);
+    border: 1px solid var(--mg-primary);
 
-    color: var(--mg-primary-dark);
+    color: var(--mg-primary);
 
-    border-radius: var(--mg-radius-pill);
+    border-radius: var(--mg-radius-sm);  
 
-    padding: 11px 22px;
+    padding: 10px 18px;
 
     font-weight: 600;
-
     text-decoration: none;
 
     transition:
+        transform var(--mg-transition),
         background var(--mg-transition),
-        color var(--mg-transition),
-        border-color var(--mg-transition),
-        transform var(--mg-transition);
+        box-shadow var(--mg-transition);
 }
 
 .mg-btn-outline:hover {
-    background: var(--mg-surface-soft);
-    border-color: var(--mg-primary-light);
-    color: var(--mg-primary-dark);
+    background: var(--mg-primary);
+    border-color: var(--mg-primary-dark);
+    color: #ffffff;
 
-    transform: translateY(-2px);
+    transform: translateY(-1px);
+    box-shadow: var(--mg-shadow-sm);
 }
+
+
+
 
 
 /* =========================
