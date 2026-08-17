@@ -269,25 +269,64 @@ a:hover {
 /* =========================
    Cards
    ========================= */
+.mg-note-card {
+  background: var(--mg-surface);
+  border: 1px solid var(--mg-border);
+  border-radius: var(--mg-radius-md);
+  box-shadow: var(--mg-shadow-sm);
 
-.mg-card {
-    background: var(--mg-surface);
-
-    border: 1px solid var(--mg-border);
-
-    border-radius: var(--mg-radius-md);
-
-    box-shadow: var(--mg-shadow-sm);
-
-    transition:
-        transform var(--mg-transition),
-        box-shadow var(--mg-transition);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+  height: 100%;                  
+  transition: transform var(--mg-transition),
+              box-shadow var(--mg-transition),
+              border-color var(--mg-transition);
 }
 
-.mg-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--mg-shadow-md);
+.mg-note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--mg-shadow-md);
+  border-color: var(--mg-primary-light);
 }
+
+
+/* Title styling */
+.mg-note-card h4 {
+  color: var(--mg-primary);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Description text */
+.mg-note-card p {
+  color: var(--mg-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* Footer area (buttons + timestamp) */
+.mg-note-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto; /* pushes footer to bottom */
+}
+
+/* Button group consistency */
+.mg-note-card-footer .btn-group .btn {
+  font-size: 0.85rem;
+  padding: 6px 12px;
+}
+
+/* Important badge */
+.mg-note-card .badge {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+}
+
+
 
 
 /* =========================

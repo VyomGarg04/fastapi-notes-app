@@ -12,30 +12,30 @@ Home
 
 {% block content %}
 <section id="hero" class="hero-section text-white text-center text-md-start">
-    <div class="container">
-        <div class="row align-items-center g-5">
-            <div class="col-md-6">
-                <h1 class="display-6 fw-bold mb-3 hero-text-main">
-                    {{ greeting }}{% if user_name %}, {{ user_name }}{% endif %}!
-                </h1>
-                <p class="lead mb-4 hero-text-sec">
-                    Your knowledge grove is growing.
-                </p>
-                <div class="d-grid gap-3 d-md-flex justify-content-md-start">
-                    <a href="#notes" class="btn btn-light btn-lg px-4 me-md-2 fw-bold hero-bnr-btn">🫘 Plant a Seed</a>
-                    <!-- <a href="#features" class="btn btn-outline-light btn-lg px-4">Explore MindGrove</a> -->
-                </div>
-            </div>
-            <div class="col-md-6 text-center">
-                <img src="{{ url_for('static', path='images/logo.svg') }}" alt="MindGrove" class="hero-logo">
-            </div>
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-md-6">
+        <h1 class="display-6 fw-bold mb-3 hero-text-main">
+            {{ greeting }}{% if user_name %}, {{ user_name }}{% endif %}!
+        </h1>
+        <p class="lead mb-4 hero-text-sec">
+            Your knowledge grove is growing.
+        </p>
+        <div class="d-grid gap-3 d-md-flex justify-content-md-start">
+            <a href="#create-notes" class="btn btn-light btn-lg px-4 me-md-2 fw-bold hero-bnr-btn">🌱 Plant a Seed</a>
+            <!-- <a href="#features" class="btn btn-outline-light btn-lg px-4">Explore MindGrove</a> -->
         </div>
+      </div>
+      <div class="col-md-6 text-center">
+          <img src="{{ url_for('static', path='images/logo.svg') }}" alt="MindGrove" class="hero-logo">
+      </div>
     </div>
+  </div>
 </section>
 
 <br><br>
 
-<section id="notes" class="container mt-1">
+<section id="create-notes" class="container mt-1">
 <h2>Create New Note</h2>
 <br>
   <form method="POST">
@@ -61,7 +61,7 @@ Home
 <hr class="hr-line">
 <br>
 
-<section id="search_notes" class="container mt-3">
+<section id="search-notes" class="container mt-3">
   <form action="notes" method="get" class="d-flex align-items-end">
     
     <!-- Search Input -->
@@ -71,7 +71,8 @@ Home
         type="text" 
         class="form-control py-2" 
         id="search_note" 
-        name="search" 
+        name="q" 
+        value="{{ q or '' }}"
         placeholder="Search in your Knowledge..."
       >
     </div>
@@ -94,7 +95,6 @@ Home
       <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="filterDropdown" style="min-width:200px;" data-bs-auto-close="outside">
         <h6 class="dropdown-header">Filters</h6>
         <div class="form-check">
-          <input class="form-check-input filter-checkbox" type="checkbox" id="filterImportant">
           <label class="form-check-label" for="filterImportant">Important Only</label>
           <input type="checkbox" 
             class="form-check-input" 
@@ -103,20 +103,20 @@ Home
             value = "true"
             {% if filter_important %}checked{% endif %}>
         </div>
-        <div class="form-check mt-2">
+        <!-- <div class="form-check mt-2">
           <input class="form-check-input filter-checkbox" type="checkbox" id="filterRecent">
           <label class="form-check-label" for="filterRecent">Recent Notes</label>
         </div>
         <div class="form-check mt-2">
           <input class="form-check-input filter-checkbox" type="checkbox" id="filterArchived">
           <label class="form-check-label" for="filterArchived">Archived</label>
-        </div>
+        </div> -->
       </div>
     </div>
 
     <!-- Search Button -->
     <div>
-      <button type="submit" class="btn btn-primary py-2 px-4" formaction="#notes-display">Search</button>
+      <button type="submit" class="btn btn-primary py-2 px-4">Search</button>
     </div>
   </form>
 </section>
@@ -141,7 +141,7 @@ Home
     <div id="notes-container" class="row g-4 mt-3">
       {% for note in newDocs %}
         <div class="col-md-4">
-          <div class="card shadow-sm h-100 border-0">
+          <div class="mg-note-card">
             <div class="card-body">
               <h4 class="card-title">{{ note.title }}</h4>
               <p class="card-text">{{ note.desc }}</p>
@@ -186,25 +186,21 @@ Home
 
   {% if page > 1 %}
     <a
-      href="/notes/?page={{ page - 1 }}
-      {% if q %}&q={{ q }}{% endif %}
-      {% if filter_important %}&filter_important=true{% endif %}"
-      class="btn mg-btn-outline"
-    >
-      <- Previous
-    </a>
+    href="/notes?page={{ page - 1 }}{% if q %}&q={{ q }}{% endif %}{% if filter_important %}&filter_important=true{% endif %}"
+    class="btn mg-btn-outline"
+>
+    ← Previous
+</a>
   {% endif %}
 
   <h5 class="m-0">Page {{ page }}</h5>
 
   {% if has_next%}
   <a
-    href="/notes/?page={{ page + 1 }}
-    {% if q %}&q={{ q }}{% endif %}
-    {% if filter_important %}&filter_important=true{% endif %}"
-    class="btn mg-btn-outline"
+    href="/notes?page={{ page + 1 }}{% if q %}&q={{ q }}{% endif %}{% if filter_important %}&filter_important=true{% endif %}"
+      class="btn mg-btn-outline"
   >
-    Next ->
+      Next →
   </a>
   {% else %}
   <button class="btn btn-outline" disabled> Next -> </button>
