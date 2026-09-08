@@ -17,6 +17,43 @@ templates = Jinja2Templates(directory = "templates")
 notes_collection = conn.notes.notes
 
 
+def get_note_stats(user_id: str):
+    user_query = {
+        "user_id": user_id
+    }
+
+    total_notes = notes_collection.count_documents(user_query)
+
+    important_notes = notes_collection.count_documents({
+        "user_id": user_id,
+        "important": True
+    })
+
+    categories = list(
+        notes_collection.aggregate([
+            {"$match": user_query},
+            {
+                "$group": {
+                    "_id": "$category",
+                    "count": {"$sum": 1}
+                }
+            },
+            {"$sort": {"count": -1}}
+        ])
+    )
+
+    categories = [
+        category
+        for category in categories
+        if category["_id"]
+    ]
+
+    return {
+        "total_notes": total_notes,
+        "important_notes": important_notes,
+        "categories": categories
+    }
+
 #to get the notes
 @note.get("/notes",response_class = HTMLResponse)
 async def get_notes(
@@ -24,7 +61,8 @@ async def get_notes(
     q:str = None, 
     filter_important:bool = False,
     page:int = 1,
-    error: str = None
+    error: str = None,
+    category: str = None,
 ):
     current_user = get_current_user(request)
     if not current_user:
@@ -35,21 +73,40 @@ async def get_notes(
     query = {
         "user_id": request.session.get("user_id")
     }
+    # Search
     if q:
         query["$or"] = [
             {"title": {"$regex": q, "$options": "i"}},
             {"content": {"$regex": q, "$options": "i"}}
         ]
+
+    # Important filter
     if filter_important:
         query["important"] =True
-    #sorting the results by the time created 
-    results = notes_collection.find(query).sort("created_at", -1).skip(skip_page).limit(per_page)
-    
+
+    # Category filter
+    if category:
+        query["category"] = category
+
+    # Get filtered notes by the time created 
+    results = (
+        notes_collection
+        .find(query)
+        .sort("created_at", -1)
+        .skip(skip_page)
+        .limit(per_page)
+        )
+
+    # Count filtered notes
     total_notes = notes_collection.count_documents(query)
+
+    
     has_next = page * per_page < total_notes
     
     newDocs = notesEntity(results)
-
+    stats = get_note_stats(
+        request.session.get("user_id")
+    )
     user_name = request.session.get("user_name")
     first_name = user_name.split(" ")[0] if user_name else "User"
     greeting = get_greeting()
@@ -71,6 +128,8 @@ async def get_notes(
             "user_name": user_name,
             "first_name": first_name,
             "error": error,
+            "stats": stats,
+            "category": category,
             }
         )
         

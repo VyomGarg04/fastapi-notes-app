@@ -128,8 +128,8 @@ a:hover {
     justify-content: center;
     gap: 8px;
 
-    background: var(--mg-primary-light);
-    border: 1px solid var(--mg-primary);
+    background: var(--mg-primary);
+    border: 1px solid var(--mg-primary-dark);
 
     color: #ffffff;
 
@@ -269,6 +269,7 @@ a:hover {
 /* =========================
    Cards
    ========================= */
+
 .mg-note-card {
   background: var(--mg-surface);
   border: 1px solid var(--mg-border);

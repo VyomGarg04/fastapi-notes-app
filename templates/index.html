@@ -159,34 +159,54 @@ Home
 </section>
 
 <br><br>
-<!-- 
-<section id="create-notes" class="container mt-1">
-<h2>Create New Note</h2>
-{% if error %}
-    <div class="alert alert-warning mt-3" role="alert">
-        {{ error }}
-    </div>
-{% endif %}
-<br>
-  <form method="POST">
-    <div class="mb-3">
-        <label for="note_title" class="form-label">Note Title</label>
-        <input type="text" class="form-control" id="note_title" name="title" required aria-contentribedby="titleHelp">
-        <div id="titleHelp" class="form-text">Keep it crisp and meaningful.</div>
-    </div>
-    <div class="mb-3">
-        <label for="note_content" class="form-label">Note Content</label>
-        <input type="text" class="form-control" id="note_content" name="content" required>
-    </div>
-    <div class="mb-3 form-check px-4">
-        <input type="checkbox" class="form-check-input" id="important" name="important">
-        <label class="form-check-label" for="important">Is the note IMPORTANT?</label>
-    </div>
-    <br>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form> 
-</section> -->
+<!-- Stats of the Notes -->
+<section class="container mt-4">
+    <div class="row g-3">
 
+        <div class="col-md-4">
+            <div class="mg-stat-card">
+                <div class="mg-stat-icon">
+                    🌱
+                </div>
+
+                <div>
+                    <h3>{{ stats.total_notes }}</h3>
+                    <p>Total Notes</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="mg-stat-card">
+                <div class="mg-stat-icon">
+                    ⭐
+                </div>
+
+                <div>
+                    <h3>{{ stats.important_notes }}</h3>
+                    <p>Important Notes</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="mg-stat-card">
+                <div class="mg-stat-icon">
+                    📚
+                </div>
+
+                <div>
+                    <h3>{{ stats.categories | length }}</h3>
+                    <p>Categories</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- Search a Note -->
 <section id="search-notes" class="container mt-3">
   <form action="/notes" method="get" class="d-flex align-items-end">
     
@@ -202,47 +222,268 @@ Home
         placeholder="Search in your Knowledge..."
       >
     </div>
-
     <!-- Filter Dropdown -->
     <div class="dropdown me-2">
-      <button class="btn mg-btn-outline d-flex align-items-center py-2 px-3" 
-              type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+
+    <button
+        class="btn mg-btn-outline d-flex align-items-center py-2 px-3"
+        type="button"
+        id="filterDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+    >
         <i class="bi bi-funnel"></i>
+
         {% set selected_filters = 0 %}
-        {% if filter_important %}{% set selected_filters = selected_filters + 1 %}{% endif %}
-        <!-- {% if filter_recent %}{% set selected_filters = selected_filters + 1 %}{% endif %}
-        {% if filter_archived %}{% set selected_filters = selected_filters + 1 %}{% endif %} -->
+
+        {% if filter_important %}
+            {% set selected_filters = selected_filters + 1 %}
+        {% endif %}
+
+        {% if category %}
+            {% set selected_filters = selected_filters + 1 %}
+        {% endif %}
 
         {% if selected_filters > 0 %}
-          <span id="filterBadge" class="badge bg-danger ms-2">{{ selected_filters }}</span>
+            <span class="badge bg-danger ms-2">
+                {{ selected_filters }}
+            </span>
         {% endif %}
-      </button>
 
-      <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="filterDropdown" style="min-width:200px;" data-bs-auto-close="outside">
-        <h6 class="dropdown-header">Filters</h6>
-        <div class="form-check">
-          <label class="form-check-label" for="filterImportant">Important Only</label>
-          <input type="checkbox" 
-            class="form-check-input" 
-            id="filter_important"
-            name="filter_important"
-            value = "true"
-            {% if filter_important %}checked{% endif %}>
+        <span class="ms-1">Filter</span>
+    </button>
+
+
+    <div
+        class="dropdown-menu dropdown-menu-end mg-filter-menu"
+        id="filterMenu"
+        aria-labelledby="filterDropdown"
+        data-bs-auto-close="outside"
+    >
+
+        <!-- Header -->
+        <div class="mg-filter-header">
+            <div class="mg-filter-title">
+                Filters
+            </div>
+
+            <small class="mg-filter-subtitle">
+                Organize your knowledge
+            </small>
         </div>
-        <!-- <div class="form-check mt-2">
-          <input class="form-check-input filter-checkbox" type="checkbox" id="filterRecent">
-          <label class="form-check-label" for="filterRecent">Recent Notes</label>
+
+
+        <!-- IMPORTANT -->
+
+        <label
+            class="mg-filter-option"
+            for="filter_important"
+        >
+
+            <input
+                type="checkbox"
+                id="filter_important"
+                name="filter_important"
+                value="true"
+                {% if filter_important %}checked{% endif %}
+            >
+
+            <span class="mg-filter-option-text">
+                <i class="bi bi-star"></i>
+                Important Only
+            </span>
+
+            <i class="bi bi-check2 mg-filter-check"></i>
+
+        </label>
+
+
+        <div class="mg-filter-divider"></div>
+
+
+        <!-- CATEGORY -->
+
+        <div class="mg-filter-section-title">
+            Category
         </div>
-        <div class="form-check mt-2">
-          <input class="form-check-input filter-checkbox" type="checkbox" id="filterArchived">
-          <label class="form-check-label" for="filterArchived">Archived</label>
-        </div> -->
-      </div>
+
+
+        <!-- ALL -->
+
+        <label class="mg-filter-option" for="category_all">
+
+            <input
+                type="radio"
+                id="category_all"
+                name="category"
+                value=""
+                {% if not category %}checked{% endif %}
+            >
+
+            <span class="mg-filter-option-text">
+                All Categories
+            </span>
+
+            <i class="bi bi-check2 mg-filter-check"></i>
+
+        </label>
+
+
+        <!-- DSA -->
+
+        <label class="mg-filter-option" for="category_dsa">
+
+            <input
+                type="radio"
+                id="category_dsa"
+                name="category"
+                value="DSA"
+                {% if category == "DSA" %}checked{% endif %}
+            >
+
+            <span class="mg-filter-option-text">
+                DSA
+            </span>
+
+            <i class="bi bi-check2 mg-filter-check"></i>
+
+        </label>
+
+
+        <!-- AI/ML -->
+
+        <label class="mg-filter-option" for="category_ai">
+
+            <input
+                type="radio"
+                id="category_ai"
+                name="category"
+                value="AI/ML"
+                {% if category == "AI/ML" %}checked{% endif %}
+            >
+
+            <span class="mg-filter-option-text">
+                AI / ML
+            </span>
+
+            <i class="bi bi-check2 mg-filter-check"></i>
+
+        </label>
+
+
+        <!-- PROJECTS -->
+
+        <label class="mg-filter-option" for="category_projects">
+
+            <input
+                type="radio"
+                id="category_projects"
+                name="category"
+                value="Projects"
+                {% if category == "Projects" %}checked{% endif %}
+            >
+
+            <span class="mg-filter-option-text">
+                Projects
+            </span>
+
+            <i class="bi bi-check2 mg-filter-check"></i>
+
+        </label>
+
+
+        <!-- COLLEGE -->
+
+        <label class="mg-filter-option" for="category_college">
+
+            <input
+                type="radio"
+                id="category_college"
+                name="category"
+                value="College"
+                {% if category == "College" %}checked{% endif %}
+            >
+
+            <span class="mg-filter-option-text">
+                College
+            </span>
+
+            <i class="bi bi-check2 mg-filter-check"></i>
+
+        </label>
+
+
+        <!-- IDEAS -->
+
+        <label class="mg-filter-option" for="category_ideas">
+
+            <input
+                type="radio"
+                id="category_ideas"
+                name="category"
+                value="Ideas"
+                {% if category == "Ideas" %}checked{% endif %}
+            >
+
+            <span class="mg-filter-option-text">
+                Ideas
+            </span>
+
+            <i class="bi bi-check2 mg-filter-check"></i>
+
+        </label>
+
+
+        <!-- OTHER -->
+
+        <label class="mg-filter-option" for="category_other">
+
+            <input
+                type="radio"
+                id="category_other"
+                name="category"
+                value="Other"
+                {% if category == "Other" %}checked{% endif %}
+            >
+
+            <span class="mg-filter-option-text">
+                Other
+            </span>
+
+            <i class="bi bi-check2 mg-filter-check"></i>
+
+        </label>
+
+
+        <!-- FOOTER -->
+
+        <div class="mg-filter-footer">
+
+            <button
+                type="button"
+                class="btn btn-sm mg-filter-clear"
+                id="clearFilters"
+            >
+                Clear
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-sm mg-filter-apply"
+                id="applyFilters"
+            >
+                Apply Filters
+            </button>
+
+        </div>
+
     </div>
+</div>
+    
 
     <!-- Search Button -->
     <div>
-      <button type="submit" class="btn btn-primary py-2 px-4">Search</button>
+      <button type="submit" class="btn-primary py-2 px-4">Search</button>
     </div>
   </form>
 </section>
@@ -267,30 +508,6 @@ Home
     <div id="notes-container" class="row g-4 mt-3">
       {% for note in newDocs %}
         <div class="col-md-4">
-          <!-- <div class="mg-note-card">
-              <h4 class="card-title">{{ note.title }}</h4>
-              <p class="card-text">{{ note.content }}</p>
-
-               <div class="d-flex justify-content-between align-items-center mt-3">
-                <div class="btn-group">
-                  <a href="/notes/edit/{{ note.id }}" class="btn btn-sm btn-outline-secondary">
-                    <i class="bi bi-pencil"></i> Edit
-                  </a>
-                  <a href="/notes/delete/{{ note.id }}" class="btn btn-sm btn-outline-danger">
-                    <i class="bi bi-trash"></i> Delete
-                  </a>
-                </div>
-                {% if note.created_at %}
-                  <small class="text-muted">{{ note.created_at }}</small>
-                {% endif %}
-              </div>
-                <div>
-                  {% if note.important %}
-                    <span class="badge bg-danger mb-2">Important</span>
-                  {% endif %}
-                </div>
-            </div> -->
-
             <div class="mg-note-card">
 
     <a
@@ -326,7 +543,7 @@ Home
       <a href="/notes/edit/{{ note.id }}" class="btn btn-sm btn-outline-secondary">
         <i class="bi bi-pencil"></i> Edit
       </a>
-      <a href="/notes/delete/{{ note.id }}" class="btn btn-sm btn-outline-danger">
+      <a href="/notes/delete/{{ note._id }}" class="btn btn-sm btn-outline-danger">
         <i class="bi bi-trash"></i> Delete
       </a>
     </div>
@@ -373,6 +590,138 @@ Home
   {% endif %}
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const filterForm = document.querySelector(
+        '#search-notes form'
+    );
+
+    const filterOptions = document.querySelectorAll(
+        '.mg-filter-option input'
+    );
+
+    const clearButton = document.getElementById(
+        'clearFilters'
+    );
+
+    const applyButton = document.getElementById(
+        'applyFilters'
+    );
+
+
+    /* ------------------------------
+       Update visual selection
+    ------------------------------ */
+
+    function updateFilterUI() {
+
+        filterOptions.forEach(input => {
+
+            const option = input.closest(
+                '.mg-filter-option'
+            );
+
+            if (input.checked) {
+                option.classList.add('active');
+            } else {
+                option.classList.remove('active');
+            }
+
+        });
+
+    }
+
+
+    /* ------------------------------
+       Option clicked
+    ------------------------------ */
+
+    filterOptions.forEach(input => {
+
+        input.addEventListener(
+            'change',
+            updateFilterUI
+        );
+
+    });
+
+
+    /* ------------------------------
+       Apply filters
+    ------------------------------ */
+
+    if (applyButton) {
+
+        applyButton.addEventListener(
+            'click',
+            function () {
+
+                if (filterForm) {
+                    filterForm.submit();
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ------------------------------
+       Clear filters
+    ------------------------------ */
+
+    if (clearButton) {
+
+        clearButton.addEventListener(
+            'click',
+            function () {
+
+                /* Clear important */
+                const important = document.getElementById(
+                    'filter_important'
+                );
+
+                if (important) {
+                    important.checked = false;
+                }
+
+
+                /* Select all categories */
+                const allCategories =
+                    document.getElementById(
+                        'category_all'
+                    );
+
+                if (allCategories) {
+                    allCategories.checked = true;
+                }
+
+
+                /* Update UI */
+                updateFilterUI();
+
+
+                /*
+                 * Immediately apply the cleared
+                 * filters.
+                 */
+                if (filterForm) {
+                    filterForm.submit();
+                }
+
+            }
+        );
+
+    }
+
+
+    /* Initial state */
+    updateFilterUI();
+
+});
+</script>
 
         
 
