@@ -16,14 +16,139 @@ Home
     <div class="row align-items-center g-5">
       <div class="col-md-6">
         <h1 class="display-6 fw-bold mb-3 hero-text-main">
-            {{ greeting }}{% if user_name %}, {{ user_name }}{% endif %}!
+            {{ greeting }}{% if user_name %}, <br>
+            {{ user_name }}{% endif %}!
         </h1>
         <p class="lead mb-4 hero-text-sec">
             Your knowledge grove is growing.
         </p>
         <div class="d-grid gap-3 d-md-flex justify-content-md-start">
-            <a href="#create-notes" class="btn btn-light btn-lg px-4 me-md-2 fw-bold hero-bnr-btn">🌱 Plant a Seed</a>
-            <!-- <a href="#features" class="btn btn-outline-light btn-lg px-4">Explore MindGrove</a> -->
+            <button
+                type="button"
+                class="btn btn-light btn-lg px-4 me-md-2 fw-bold hero-bnr-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#createNoteModal"
+            >
+                🌱 Plant a Seed
+            </button>
+<!-- Create new Note Dialoge Box -->
+  <div class="modal fade" id="createNoteModal" tabindex="-1" aria-labelledby="createNoteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="createNoteModalLabel">
+                        🌱 Plant a New Seed
+                    </h5>
+                    <small class="text-muted">
+                        Capture an idea and let your grove grow.
+                    </small>
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
+                </button>
+            </div>
+
+            <form method="POST" action="/notes">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="note_title" class="form-label">
+                            Note Title
+                        </label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="note_title"
+                            name="title"
+                            placeholder="e.g. Binary Search"
+                            required
+                        >
+                    </div>
+                    <div class="mb-3">
+                        <label for="note_content" class="form-label">
+                            Your Thought
+                        </label>
+                        <textarea
+                            class="form-control"
+                            id="note_content"
+                            name="content"
+                            rows="7"
+                            placeholder="Write your thought, idea, concept..."
+                        ></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">
+                            Category
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="category"
+                            name="category"
+                        >
+                            <option value="">Select a category</option>
+                            <option value="DSA">DSA</option>
+                            <option value="AI/ML">AI/ML</option>
+                            <option value="Projects">Projects</option>
+                            <option value="College">College</option>
+                            <option value="Ideas">Ideas</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tags" class="form-label">
+                            Tags
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="tags"
+                            name="tags"
+                            placeholder="e.g. arrays, algorithms, searching"
+                        >
+
+                        <div class="form-text">
+                            Separate tags with commas.
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input
+                            type="checkbox"
+                            class="form-check-input"
+                            id="important"
+                            name="important"
+                        >
+                        <label
+                            class="form-check-label"
+                            for="important">
+                            Mark as important
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+                        🌱 Plant Seed
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
         </div>
       </div>
       <div class="col-md-6 text-center">
@@ -34,19 +159,24 @@ Home
 </section>
 
 <br><br>
-
+<!-- 
 <section id="create-notes" class="container mt-1">
 <h2>Create New Note</h2>
+{% if error %}
+    <div class="alert alert-warning mt-3" role="alert">
+        {{ error }}
+    </div>
+{% endif %}
 <br>
   <form method="POST">
     <div class="mb-3">
         <label for="note_title" class="form-label">Note Title</label>
-        <input type="text" class="form-control" id="note_title" name="title" aria-describedby="titleHelp">
+        <input type="text" class="form-control" id="note_title" name="title" required aria-contentribedby="titleHelp">
         <div id="titleHelp" class="form-text">Keep it crisp and meaningful.</div>
     </div>
     <div class="mb-3">
-        <label for="note_desc" class="form-label">Note Description</label>
-        <input type="text" class="form-control" id="note_desc" name="desc">
+        <label for="note_content" class="form-label">Note Content</label>
+        <input type="text" class="form-control" id="note_content" name="content" required>
     </div>
     <div class="mb-3 form-check px-4">
         <input type="checkbox" class="form-check-input" id="important" name="important">
@@ -55,14 +185,10 @@ Home
     <br>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form> 
-</section>
-
-<br>
-<hr class="hr-line">
-<br>
+</section> -->
 
 <section id="search-notes" class="container mt-3">
-  <form action="notes" method="get" class="d-flex align-items-end">
+  <form action="/notes" method="get" class="d-flex align-items-end">
     
     <!-- Search Input -->
     <div class="flex-grow-1 me-2">
@@ -84,8 +210,8 @@ Home
         <i class="bi bi-funnel"></i>
         {% set selected_filters = 0 %}
         {% if filter_important %}{% set selected_filters = selected_filters + 1 %}{% endif %}
-        {% if filter_recent %}{% set selected_filters = selected_filters + 1 %}{% endif %}
-        {% if filter_archived %}{% set selected_filters = selected_filters + 1 %}{% endif %}
+        <!-- {% if filter_recent %}{% set selected_filters = selected_filters + 1 %}{% endif %}
+        {% if filter_archived %}{% set selected_filters = selected_filters + 1 %}{% endif %} -->
 
         {% if selected_filters > 0 %}
           <span id="filterBadge" class="badge bg-danger ms-2">{{ selected_filters }}</span>
@@ -129,7 +255,7 @@ Home
   {% if newDocs %}
     <h2 id="notes-display" class="mb-3 fw-bold text-success">Your Notes</h2>
 
-    <!-- Context heading -->
+    <!-- Content heading -->
     {% if q and filter_important %}
       <h5 class="text-muted">Showing <span class="text-danger">important</span> results for <strong>{{ q }}</strong></h5>
     {% elif filter_important %}
@@ -141,10 +267,9 @@ Home
     <div id="notes-container" class="row g-4 mt-3">
       {% for note in newDocs %}
         <div class="col-md-4">
-          <div class="mg-note-card">
-            <div class="card-body">
+          <!-- <div class="mg-note-card">
               <h4 class="card-title">{{ note.title }}</h4>
-              <p class="card-text">{{ note.desc }}</p>
+              <p class="card-text">{{ note.content }}</p>
 
                <div class="d-flex justify-content-between align-items-center mt-3">
                 <div class="btn-group">
@@ -164,8 +289,49 @@ Home
                     <span class="badge bg-danger mb-2">Important</span>
                   {% endif %}
                 </div>
-            </div>
-          </div>
+            </div> -->
+
+            <div class="mg-note-card">
+
+    <a
+        href="/notes/view/{{ note.id }}"
+        class="mg-note-card-content"
+    >
+        <h4 class="mg-note-title">
+            {{ note.title }}
+        </h4>
+
+        <p class="mg-note-content">
+            {{ note.content }}
+        </p>
+
+        <div class="mg-note-card-footer">
+
+            {% if note.important %}
+                <span class="mg-important">
+                    🌱 Important
+                </span>
+            {% endif %}
+
+            {% if note.created_at %}
+                <small class="mg-note-meta">
+                    {{ note.created_at }}
+                </small>
+            {% endif %}
+
+        </div>
+    </a>
+
+    <div class="btn-group">
+      <a href="/notes/edit/{{ note.id }}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-pencil"></i> Edit
+      </a>
+      <a href="/notes/delete/{{ note.id }}" class="btn btn-sm btn-outline-danger">
+        <i class="bi bi-trash"></i> Delete
+      </a>
+    </div>
+
+</div>
         </div>
       {% endfor %}
     </div>

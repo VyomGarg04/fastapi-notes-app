@@ -9,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 import starlette.status as status
 from bson import ObjectId
 from datetime import datetime, UTC
+from bson import ObjectId
 
 note = APIRouter()
 templates = Jinja2Templates(directory = "templates")
@@ -18,7 +19,13 @@ notes_collection = conn.notes.notes
 
 #to get the notes
 @note.get("/notes",response_class = HTMLResponse)
-async def get_notes(request: Request, q:str = None, filter_important:bool = False,page:int = 1):
+async def get_notes(
+    request: Request, 
+    q:str = None, 
+    filter_important:bool = False,
+    page:int = 1,
+    error: str = None
+):
     current_user = get_current_user(request)
     if not current_user:
         return RedirectResponse("/login", status_code=302)
@@ -31,7 +38,7 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
     if q:
         query["$or"] = [
             {"title": {"$regex": q, "$options": "i"}},
-            {"desc": {"$regex": q, "$options": "i"}}
+            {"content": {"$regex": q, "$options": "i"}}
         ]
     if filter_important:
         query["important"] =True
@@ -63,6 +70,7 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
             "greeting": greeting,
             "user_name": user_name,
             "first_name": first_name,
+            "error": error,
             }
         )
         
@@ -72,21 +80,64 @@ async def get_notes(request: Request, q:str = None, filter_important:bool = Fals
 @note.post("/notes")
 async def create_note(request: Request):
     current_user = get_current_user(request)
+
     if not current_user:
         return RedirectResponse("/login", status_code=302)
 
     form = await request.form()
     formDict = dict(form)
-    formDict["important"] = formDict.get("important") == "on"
-    formDict["created_at"] = datetime.now(UTC)
 
-    formDict["user_id"] = request.session.get("user_id")
-    formDict["user_email"] = request.session.get("user")
-    
-    if not formDict.get("title"):
-        return RedirectResponse("/?error=MissingTitle", status_code=303)
-    inserted_note = notes_collection.insert_one(formDict)
-    return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)
+    # Basic fields
+    title = formDict.get("title", "").strip()
+    content = formDict.get("content", "").strip()
+
+    # Category & Tags
+    category = formDict.get("category", "").strip()
+    tags_input = formDict.get("tags", "")
+
+    tags = [
+        tag.strip().lower()
+        for tag in tags_input.split(",")
+        if tag.strip()
+    ]
+
+    # Validation
+    if not title and not content:
+        return RedirectResponse(
+            url="/notes?error=Please%20enter%20both%20a%20title%20and%20content",
+            status_code=303
+        )
+
+    if not title:
+        return RedirectResponse(
+            url="/notes?error=Please%20enter%20a%20title",
+            status_code=303
+        )
+
+    if not content:
+        return RedirectResponse(
+            url="/notes?error=Please%20enter%20a%20content",
+            status_code=303
+        )
+
+    # Create the document we actually want to store
+    note_data = {
+        "title": title,
+        "content": content,
+        "important": formDict.get("important") == "on",
+        "category": category or None,
+        "tags": tags,
+        "user_id": request.session.get("user_id"),
+        "user_email": request.session.get("user"),
+        "created_at": datetime.now(UTC)
+    }
+    notes_collection.insert_one(note_data)
+
+    return RedirectResponse(
+        url="/notes",
+        status_code=status.HTTP_303_SEE_OTHER
+    )
+
 
 #to delete the note
 @note.get("/notes/delete/{id}")
@@ -142,3 +193,37 @@ async def save_edited_note(request: Request, id:str):
         {"$set": formDict}
         )
     return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)
+
+
+#view the note on new page
+@note.get("/notes/view/{id}", response_class=HTMLResponse)
+async def view_note(request: Request, id: str):
+
+    current_user = get_current_user(request)
+
+    if not current_user:
+        return RedirectResponse("/login", status_code=302)
+
+    try:
+        note_found = notes_collection.find_one({
+            "_id": ObjectId(id),
+            "user_id": request.session.get("user_id")
+        })
+    except Exception:
+        return RedirectResponse("/notes", status_code=302)
+
+    if not note_found:
+        return RedirectResponse("/notes", status_code=302)
+
+    note_found = noteEntity(note_found)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="note.html",
+        context={
+            "request": request,
+            "note": note_found,
+            "show_navbar": True,
+            "use_container": False
+        }
+    )

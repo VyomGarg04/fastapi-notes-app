@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ note.title }} | MindGrove
+{% endblock %}
+
+{% block styles %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='css/dashboard.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <a href="/notes" class="btn mg-btn-outline mb-4">
+        <i class="bi bi-arrow-left"> Back to Grove</i>
+    </a>
+
+    <article class="note-detail">
+
+        <div class="d-flex justify-content-between align-items-start gap-3">
+
+            <div>
+                <h1 class="note-detail-title">
+                    {{ note.title }}
+                </h1>
+
+                {% if note.important %}
+                    <span class="badge bg-danger">
+                        Important
+                    </span>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="note-detail-content">
+            {{ note.content }}
+        </div>
+        <br>
+        {% if note.category %}
+            <span class="mg-note-category">
+                {{ note.category }}
+            </span>
+        {% endif %}
+
+        {% if note.tags %}
+            <div class="mg-note-tags mt-2">
+                {% for tag in note.tags %}
+                    <span class="mg-note-tag">
+                        #{{ tag }}
+                    </span>
+                {% endfor %}
+            </div>
+            <br>
+        {% endif %}
+        {% if note.created_at %}
+            <small class="note-detail-meta">
+                Created {{ note.created_at }}
+            </small>
+        {% endif %}
+            <br><br>
+    <div class="btn-group">
+      <a href="/notes/edit/{{ note.id }}" class="btn btn-mg btn-outline-secondary">
+        <i class="bi bi-pencil style="font-size: 2rem;"></i> Edit
+      </a>
+      <a href="/notes/delete/{{ note.id }}" class="btn btn-mg btn-outline-danger">
+        <i class="bi bi-trash"></i> Delete
+      </a>
+    </div>
+
+    </article>
+
+</div>
+
+{% endblock %}
