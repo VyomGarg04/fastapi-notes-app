@@ -17,6 +17,10 @@ templates = Jinja2Templates(directory = "templates")
 notes_collection = conn.notes.notes
 
 
+
+
+
+
 def get_note_stats(user_id: str):
     user_query = {
         "user_id": user_id
@@ -53,6 +57,57 @@ def get_note_stats(user_id: str):
         "important_notes": important_notes,
         "categories": categories
     }
+
+
+
+
+
+
+
+def get_related_notes(note, user_id):
+    query = {
+        "user_id" : user_id,
+        "_id": {"$ne": note["_id"]}
+    }
+    candidates = list(notes_collection.find(query))
+    print("RELATED CANDIDATES:", len(candidates))
+
+    current_category = note.get("category")
+    current_tags = set(note.get("tags", []))
+
+    related = []
+
+    # Finding the related notes
+    for candidate in candidates:
+        score = 0
+
+        candidate_category = candidate.get("category")
+        candidate_tags = set(candidate.get("tags", []))
+
+        if current_category and candidate_category == current_category:
+            score += 3
+
+        shared_tags = current_tags.intersection(candidate_tags)
+        score += len(shared_tags) * 2
+
+        if score > 0:
+            related.append({
+                "note": candidate,
+                "score": score,
+                "shared_tags": list(shared_tags)
+            })
+
+
+    related.sort(
+        key=lambda item: item["score"],
+        reverse=True
+    )
+    
+    return related[:5]
+
+
+
+
 
 #to get the notes
 @note.get("/notes",response_class = HTMLResponse)
@@ -133,6 +188,11 @@ async def get_notes(
             }
         )
         
+
+
+
+
+
         
 
 #to create a new note
@@ -198,6 +258,11 @@ async def create_note(request: Request):
     )
 
 
+
+
+
+
+
 #to delete the note
 @note.get("/notes/delete/{id}")
 async def  delete_note(request:Request, id: str):
@@ -210,6 +275,11 @@ async def  delete_note(request:Request, id: str):
         "user_id":request.session.get("user_id")
     })
     return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)
+
+
+
+
+
 
 
 
@@ -254,6 +324,12 @@ async def save_edited_note(request: Request, id:str):
     return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)
 
 
+
+
+
+
+
+
 #view the note on new page
 @note.get("/notes/view/{id}", response_class=HTMLResponse)
 async def view_note(request: Request, id: str):
@@ -274,8 +350,11 @@ async def view_note(request: Request, id: str):
     if not note_found:
         return RedirectResponse("/notes", status_code=302)
 
+    related_notes = get_related_notes(note_found, request.session.get("user_id"))
+
     note_found = noteEntity(note_found)
 
+    
     return templates.TemplateResponse(
         request=request,
         name="note.html",
@@ -283,6 +362,7 @@ async def view_note(request: Request, id: str):
             "request": request,
             "note": note_found,
             "show_navbar": True,
-            "use_container": False
+            "use_container": False,
+            "related_notes": related_notes,
         }
     )

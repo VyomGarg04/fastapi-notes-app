@@ -1,0 +1,44 @@
+.mg-related-section {
+    margin-top: 48px;
+}
+
+.mg-related-section h2 {
+    margin-bottom: 16px;
+    color: var(--mg-primary-dark);
+    font-size: 1.25rem;
+}
+
+.mg-related-note {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 16px 18px;
+    margin-bottom: 10px;
+
+    text-decoration: none;
+    color: var(--mg-text-primary);
+
+    border: 1px solid var(--mg-border);
+    border-radius: var(--mg-radius-md);
+    background: var(--mg-surface);
+
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.mg-related-note:hover {
+    transform: translateY(-2px);
+    border-color: var(--mg-primary);
+}
+
+.mg-related-note-title {
+    font-weight: 600;
+}
+
+.mg-related-note-score {
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--mg-primary);
+}

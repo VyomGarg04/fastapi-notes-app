@@ -223,13 +223,12 @@ Home
       >
     </div>
     <!-- Filter Dropdown -->
-    <div class="dropdown me-2">
+    <div class="mg-filter-wrapper me-2">
 
     <button
         class="btn mg-btn-outline d-flex align-items-center py-2 px-3"
         type="button"
         id="filterDropdown"
-        data-bs-toggle="dropdown"
         aria-expanded="false"
     >
         <i class="bi bi-funnel"></i>
@@ -255,10 +254,9 @@ Home
 
 
     <div
-        class="dropdown-menu dropdown-menu-end mg-filter-menu"
+        class="mg-filter-menu"
         id="filterMenu"
-        aria-labelledby="filterDropdown"
-        data-bs-auto-close="outside"
+        aria-hidden="true"
     >
 
         <!-- Header -->
@@ -594,39 +592,35 @@ Home
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    const filterForm = document.querySelector(
-        '#search-notes form'
-    );
+    const filterButton = document.getElementById("filterDropdown");
+    const filterMenu = document.getElementById("filterMenu");
+
+    const filterForm = document.querySelector("#search-notes form");
 
     const filterOptions = document.querySelectorAll(
-        '.mg-filter-option input'
+        ".mg-filter-option input"
     );
 
-    const clearButton = document.getElementById(
-        'clearFilters'
-    );
-
-    const applyButton = document.getElementById(
-        'applyFilters'
-    );
+    const clearButton = document.getElementById("clearFilters");
+    const applyButton = document.getElementById("applyFilters");
 
 
-    /* ------------------------------
-       Update visual selection
-    ------------------------------ */
+    /* ================================
+       UPDATE SELECTED UI
+    ================================= */
 
     function updateFilterUI() {
 
-        filterOptions.forEach(input => {
+        filterOptions.forEach(function (input) {
 
             const option = input.closest(
-                '.mg-filter-option'
+                ".mg-filter-option"
             );
 
             if (input.checked) {
-                option.classList.add('active');
+                option.classList.add("active");
             } else {
-                option.classList.remove('active');
+                option.classList.remove("active");
             }
 
         });
@@ -634,90 +628,178 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* ------------------------------
-       Option clicked
-    ------------------------------ */
+    /* ================================
+       OPEN / CLOSE
+    ================================= */
 
-    filterOptions.forEach(input => {
+    filterButton.addEventListener("click", function (event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const isOpen =
+            filterMenu.classList.contains("show");
+
+        if (isOpen) {
+
+            filterMenu.classList.remove("show");
+
+            filterButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            filterMenu.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+        } else {
+
+            filterMenu.classList.add("show");
+
+            filterButton.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            filterMenu.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+        }
+
+    });
+
+
+    /* ================================
+       CLICK INSIDE MENU
+    ================================= */
+
+    filterMenu.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+        }
+    );
+
+
+    /* ================================
+       SELECT FILTER
+    ================================= */
+
+    filterOptions.forEach(function (input) {
 
         input.addEventListener(
-            'change',
-            updateFilterUI
+            "change",
+            function () {
+
+                updateFilterUI();
+
+            }
         );
 
     });
 
 
-    /* ------------------------------
-       Apply filters
-    ------------------------------ */
+    /* ================================
+       APPLY FILTERS
+    ================================= */
 
-    if (applyButton) {
+    applyButton.addEventListener(
+        "click",
+        function (event) {
 
-        applyButton.addEventListener(
-            'click',
-            function () {
+            event.preventDefault();
+            event.stopPropagation();
 
-                if (filterForm) {
-                    filterForm.submit();
-                }
+            filterForm.submit();
 
-            }
-        );
-
-    }
+        }
+    );
 
 
-    /* ------------------------------
-       Clear filters
-    ------------------------------ */
+    /* ================================
+       CLEAR FILTERS
+    ================================= */
 
-    if (clearButton) {
+    clearButton.addEventListener(
+        "click",
+        function (event) {
 
-        clearButton.addEventListener(
-            'click',
-            function () {
+            event.preventDefault();
+            event.stopPropagation();
 
-                /* Clear important */
-                const important = document.getElementById(
-                    'filter_important'
+
+            const important =
+                document.getElementById(
+                    "filter_important"
                 );
 
-                if (important) {
-                    important.checked = false;
-                }
+            const allCategories =
+                document.getElementById(
+                    "category_all"
+                );
 
 
-                /* Select all categories */
-                const allCategories =
-                    document.getElementById(
-                        'category_all'
-                    );
+            if (important) {
+                important.checked = false;
+            }
 
-                if (allCategories) {
-                    allCategories.checked = true;
-                }
+            if (allCategories) {
+                allCategories.checked = true;
+            }
 
 
-                /* Update UI */
-                updateFilterUI();
+            updateFilterUI();
 
 
-                /*
-                 * Immediately apply the cleared
-                 * filters.
-                 */
-                if (filterForm) {
-                    filterForm.submit();
-                }
+            /*
+             * Submit after clearing
+             */
+
+            filterForm.submit();
+
+        }
+    );
+
+
+    /* ================================
+       CLICK OUTSIDE
+    ================================= */
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                !filterMenu.contains(event.target) &&
+                !filterButton.contains(event.target)
+            ) {
+
+                filterMenu.classList.remove("show");
+
+                filterButton.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                filterMenu.setAttribute(
+                    "aria-hidden",
+                    "true"
+                );
 
             }
-        );
 
-    }
+        }
+    );
 
 
     /* Initial state */
+
     updateFilterUI();
 
 });

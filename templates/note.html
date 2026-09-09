@@ -7,6 +7,10 @@
 {% block styles %}
 <link
     rel="stylesheet"
+    href="{{ url_for('static', path='css/note.css') }}"
+>
+<link
+    rel="stylesheet"
     href="{{ url_for('static', path='css/dashboard.css') }}"
 >
 {% endblock %}
@@ -76,6 +80,25 @@
 
     </article>
 
+    <br><br>
+
+    {% if related_notes %}
+    <section class="mg-related-section">
+        <h2>Related Notes</h2>
+
+        {% for item in related_notes %}
+            <a href="/notes/view/{{ item.note._id }}" class="mg-related-note">
+                <div class="mg-related-note-title">
+                    {{ item.note.title }}
+                </div>
+
+                <div class="mg-related-note-score">
+                    score : {{ item.score }} points
+                </div>
+            </a>
+        {% endfor %}
+    </section>
+    {% endif %}
 </div>
 
 {% endblock %}
