@@ -96,7 +96,11 @@ def get_related_notes(note, user_id):
                 "title": candidate.get("title", ""),
                 "category": candidate.get("category"),
                 "shared_tags": list(shared_tags),
-                "score": score
+                "score": score,
+                "same_category": (
+                    current_category
+                    and candidate_category == current_category
+                ),
             })
 
 
@@ -120,6 +124,7 @@ async def get_notes(
     page:int = 1,
     error: str = None,
     category: str = None,
+    tag: str = None,
 ):
     current_user = get_current_user(request)
     if not current_user:
@@ -145,6 +150,11 @@ async def get_notes(
     if category:
         query["category"] = category
 
+    # Tag filter
+    if tag:
+        tag = tag.strip().lower()
+        query["tags"] = tag 
+    
     # Get filtered notes by the time created 
     results = (
         notes_collection
@@ -187,6 +197,7 @@ async def get_notes(
             "error": error,
             "stats": stats,
             "category": category,
+            "tag": tag,
             }
         )
         

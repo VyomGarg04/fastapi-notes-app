@@ -87,7 +87,10 @@
         <h2>Related Notes</h2>
 
         {% for item in related_notes %}
-            <a href="/notes/view/{{ item.id }}" class="mg-related-note">
+            <div
+                class="mg-related-note"
+                data-note-url="/notes/view/{{ item.id }}"
+            >
 
                 <div class="mg-related-note-info">
 
@@ -102,25 +105,61 @@
                     {% endif %}
 
                     {% if item.shared_tags %}
-                        <div class="mg-related-note-tags">
-                            {% for tag in item.shared_tags %}
-                                <span class="mg-related-note-tag">
-                                    #{{ tag }}
-                                </span>
-                            {% endfor %}
+                    <div class="mg-note-tags mt-2">
+                        {% for tag in item.shared_tags %}
+                        <div class="btn-group">
+                            <a
+                                href="/notes?tag={{ tag }}"
+                                class="mg-note-tag"
+                            >
+                                #{{ tag }}
+                            </a>
                         </div>
-                    {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
                 </div>
 
-                <div class="mg-related-note-score">
-                    {{ item.score }} match points
+                <div class="mg-related-note-match">
+
+                    <div class="mg-related-note-score">
+                        {{ item.score }} match points
+                    </div>
+
+                    <div class="mg-related-note-reason">
+                        {% if item.same_category %}
+                            Same category
+                        {% endif %}
+
+                        {% if item.shared_tags %}
+                            {% if item.same_category %}
+                                ·
+                            {% endif %}
+                            {{ item.shared_tags | length }} shared tag{% if item.shared_tags | length != 1 %}s{% endif %}
+                        {% endif %}
+                    </div>
+
                 </div>
 
-            </a>
+            </div>
         {% endfor %}
     </section>
     {% endif %}
 </div>
 
+<script>
+document.querySelectorAll(".mg-related-note").forEach(function (card) {
+
+    card.addEventListener("click", function (event) {
+
+        if (event.target.closest("a")) {
+            return;
+        }
+
+        window.location.href = card.dataset.noteUrl;
+    });
+
+});
+</script>\
 {% endblock %}

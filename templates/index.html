@@ -496,11 +496,21 @@ Home
 
     <!-- Content heading -->
     {% if q and filter_important %}
-      <h5 class="text-muted">Showing <span class="text-danger">important</span> results for <strong>{{ q }}</strong></h5>
+        <h5 class="text-muted">
+            Showing <span class="text-danger">important</span> results for <strong>{{ q }}</strong>
+        </h5>
     {% elif filter_important %}
-      <h5 class="text-muted">Showing <span class="text-danger">important</span> notes</h5>
+        <h5 class="text-muted">
+            Showing <span class="text-danger">important</span> notes
+        </h5>
     {% elif q %}
-      <h5 class="text-muted">Showing results for <strong>{{ q }}</strong></h5>
+        <h5 class="text-muted">
+            Showing results for <strong>{{ q }}</strong>
+        </h5>
+    {% elif tag %}
+        <h5 class="text-muted">
+            Showing notes tagged <strong>#{{ tag }}</strong>
+        </h5>
     {% endif %}
 
     <div id="notes-container" class="row g-4 mt-3">

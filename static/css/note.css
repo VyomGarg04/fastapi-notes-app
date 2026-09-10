@@ -10,7 +10,7 @@
 
 .mg-related-note {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
 
@@ -25,6 +25,7 @@
     background: var(--mg-surface);
 
     transition: transform 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
 }
 
 .mg-related-note:hover {
@@ -41,4 +42,116 @@
     font-size: 0.78rem;
     font-weight: 600;
     color: var(--mg-primary);
+}
+
+.mg-related-note-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.mg-related-note-title {
+    margin-bottom: 6px;
+    color: var(--mg-primary-dark);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.mg-related-note-category {
+    display: inline-block;
+
+    margin-bottom: 8px;
+    padding: 3px 9px;
+
+    border-radius: 999px;
+
+    background: var(--mg-surface-soft);
+    color: var(--mg-primary);
+
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+
+.mg-related-note-score {
+    flex-shrink: 0;
+
+    display: inline-block;
+    width: fit-content;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    background: var(--mg-surface-soft);
+    color: var(--mg-primary);
+
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.mg-related-note-match {
+    flex: 0 0 auto;
+    max-width: none;
+    text-align: right;
+}
+@media (max-width: 576px) {
+    .mg-related-note-match {
+        max-width: 125px;
+    }
+}
+
+.mg-related-note-reason {
+    margin-top: 4px;
+    color: var(--mg-text-light);
+    font-size: 0.7rem;
+    font-weight: 400;
+}
+
+@media (max-width: 576px) {
+    .mg-related-note {
+        gap: 10px;
+    }
+
+    .mg-related-note-match {
+        text-align: right;
+    }
+
+    .mg-related-note-reason {
+        max-width: 120px;
+        line-height: 1.4;
+    }
+}
+
+
+.mg-note-tag {
+    display: inline-block;
+
+    padding: 4px 9px;
+
+    border-radius: 999px;
+
+    background: var(--mg-surface-soft);
+    color: var(--mg-text-secondary);
+
+    font-size: 0.75rem;
+    text-decoration: none;
+
+    transition:
+        background var(--mg-transition),
+        color var(--mg-transition);
+    
+    cursor: pointer;
+}
+.mg-note-tag:visited,
+.mg-note-tag:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+.mg-note-tag:hover {
+    background: var(--mg-accent);
+    color: var(--mg-primary);
+    text-decoration: none;
+    transform: translateY(-1px);
 }
