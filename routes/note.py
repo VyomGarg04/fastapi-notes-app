@@ -92,9 +92,11 @@ def get_related_notes(note, user_id):
 
         if score > 0:
             related.append({
-                "note": candidate,
-                "score": score,
-                "shared_tags": list(shared_tags)
+                "id": str(candidate["_id"]),
+                "title": candidate.get("title", ""),
+                "category": candidate.get("category"),
+                "shared_tags": list(shared_tags),
+                "score": score
             })
 
 

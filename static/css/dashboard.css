@@ -42,7 +42,7 @@
 /* Buttons */
 .btn-primary {
     display: inline-flex;
-    align-items: center;
+    align-items: center;    
     justify-content: center;
     gap: 8px;
 

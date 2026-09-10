@@ -71,7 +71,7 @@
             <br><br>
     <div class="btn-group">
       <a href="/notes/edit/{{ note.id }}" class="btn btn-mg btn-outline-secondary">
-        <i class="bi bi-pencil style="font-size: 2rem;"></i> Edit
+        <i class="bi bi-pencil"></i> Edit
       </a>
       <a href="/notes/delete/{{ note.id }}" class="btn btn-mg btn-outline-danger">
         <i class="bi bi-trash"></i> Delete
@@ -87,14 +87,36 @@
         <h2>Related Notes</h2>
 
         {% for item in related_notes %}
-            <a href="/notes/view/{{ item.note._id }}" class="mg-related-note">
-                <div class="mg-related-note-title">
-                    {{ item.note.title }}
+            <a href="/notes/view/{{ item.id }}" class="mg-related-note">
+
+                <div class="mg-related-note-info">
+
+                    <div class="mg-related-note-title">
+                        {{ item.title }}
+                    </div>
+
+                    {% if item.category %}
+                        <span class="mg-related-note-category">
+                            {{ item.category }}
+                        </span>
+                    {% endif %}
+
+                    {% if item.shared_tags %}
+                        <div class="mg-related-note-tags">
+                            {% for tag in item.shared_tags %}
+                                <span class="mg-related-note-tag">
+                                    #{{ tag }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
                 </div>
 
                 <div class="mg-related-note-score">
-                    score : {{ item.score }} points
+                    {{ item.score }} match points
                 </div>
+
             </a>
         {% endfor %}
     </section>
