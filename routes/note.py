@@ -1,6 +1,5 @@
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi import APIRouter, Request
-# from models.note import Note
 from config.db import conn
 from utils.auth import get_current_user
 from utils.greeting import get_greeting
