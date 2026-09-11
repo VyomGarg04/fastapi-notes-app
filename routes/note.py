@@ -5,6 +5,7 @@ from utils.auth import get_current_user
 from utils.greeting import get_greeting
 from schemas.note import noteEntity, notesEntity
 from fastapi.templating import Jinja2Templates
+from utils.embedding import generate_embedding
 import starlette.status as status
 from bson import ObjectId
 from datetime import datetime, UTC
@@ -250,6 +251,13 @@ async def create_note(request: Request):
             url="/notes?error=Please%20enter%20a%20content",
             status_code=303
         )
+    
+    embedding_text = f"{title}\n\n{content}"
+    try:
+        embedding = generate_embedding(embedding_text)
+    except Exception as e:
+        print(f"Embedding generation failed: {e}")
+        embedding = None
 
     # Create the document we actually want to store
     note_data = {
@@ -260,7 +268,8 @@ async def create_note(request: Request):
         "tags": tags,
         "user_id": request.session.get("user_id"),
         "user_email": request.session.get("user"),
-        "created_at": datetime.now(UTC)
+        "created_at": datetime.now(UTC),
+        "embedding": embedding,
     }
     notes_collection.insert_one(note_data)
 
@@ -318,6 +327,10 @@ async def edit_note(request: Request, id: str):
             }
         )
 
+
+
+
+    
 @note.post("/notes/edit/{id}")
 async def save_edited_note(request: Request, id:str):
     current_user = get_current_user(request)
@@ -325,14 +338,41 @@ async def save_edited_note(request: Request, id:str):
         return RedirectResponse("/login", status_code=302)
 
     form = await request.form()
-    formDict = dict(form)
-    formDict["important"] = True if formDict.get("important") == "on" else False
+
+    title = form.get("title")
+    content = form.get("content")
+    category = form.get("category")
+    tags = [
+        tag.strip().lower()
+        for tag in form.get("tags", "").split(",")
+        if tag.strip()
+    ]
+    important = form.get("important") == "on"
+
+    update_data = {
+            "title": title,
+            "content": content,
+            "category": category or None,
+            "tags": tags,
+            "important": important,
+        }
+    embedding_text = f"{title}\n\n{content}"
+
+    try:
+        embedding = generate_embedding(embedding_text)
+    except Exception as e:
+        print(f"Embedding generation failed: {e}")
+
+    if embedding is None:
+        update_data["embeding"] = embedding
+    
     notes_collection.update_one({
         "_id": ObjectId(id),
         "user_id":request.session.get("user_id")
         },
-        {"$set": formDict}
+        {"$set": update_data}
         )
+    
     return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)
 
 
