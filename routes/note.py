@@ -358,13 +358,15 @@ async def save_edited_note(request: Request, id:str):
         }
     embedding_text = f"{title}\n\n{content}"
 
+    embedding = None
+    
     try:
         embedding = generate_embedding(embedding_text)
     except Exception as e:
         print(f"Embedding generation failed: {e}")
 
-    if embedding is None:
-        update_data["embeding"] = embedding
+    if embedding is not None:
+        update_data["embedding"] = embedding
     
     notes_collection.update_one({
         "_id": ObjectId(id),
