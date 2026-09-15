@@ -6,6 +6,7 @@ from utils.greeting import get_greeting
 from schemas.note import noteEntity, notesEntity
 from fastapi.templating import Jinja2Templates
 from utils.embedding import generate_embedding
+from utils.semantic_search import semantic_search
 import starlette.status as status
 from bson import ObjectId
 from datetime import datetime, UTC
@@ -119,7 +120,8 @@ def get_related_notes(note, user_id):
 @note.get("/notes",response_class = HTMLResponse)
 async def get_notes(
     request: Request, 
-    q:str = None, 
+    q:str = None,
+    search_mode: str = "keyword",
     filter_important:bool = False,
     page:int = 1,
     error: str = None,
@@ -136,7 +138,14 @@ async def get_notes(
         "user_id": request.session.get("user_id")
     }
     # Search
-    if q:
+    semantic_results = None                             
+    if q and search_mode == "semantic":
+        semantic_results = semantic_search(
+            q,
+            request.session.get("user_id"),
+            limit=per_page,
+        )
+    elif q:
         query["$or"] = [
             {"title": {"$regex": q, "$options": "i"}},
             {"content": {"$regex": q, "$options": "i"}}
@@ -155,17 +164,21 @@ async def get_notes(
         tag = tag.strip().lower()
         query["tags"] = tag 
     
-    # Get filtered notes by the time created 
-    results = (
-        notes_collection
-        .find(query)
-        .sort("created_at", -1)
-        .skip(skip_page)
-        .limit(per_page)
-        )
-
-    # Count filtered notes
-    total_notes = notes_collection.count_documents(query)
+    
+    if semantic_results is not None:
+        results = semantic_results
+        total_notes = len(semantic_results)
+    else:
+        # Get filtered notes by the time created
+        results = (
+            notes_collection
+            .find(query)
+            .sort("created_at", -1)
+            .skip(skip_page)
+            .limit(per_page)
+            )
+        # Count filtered notes
+        total_notes = notes_collection.count_documents(query)
 
     
     has_next = page * per_page < total_notes
@@ -198,6 +211,7 @@ async def get_notes(
             "stats": stats,
             "category": category,
             "tag": tag,
+            "search_mode": search_mode,
             }
         )
         

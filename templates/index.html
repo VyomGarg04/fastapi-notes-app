@@ -221,6 +221,30 @@ Home
         value="{{ q or '' }}"
         placeholder="Search in your Knowledge..."
       >
+    <!--Search Mode-->
+    </div>
+        <div class="me-2">
+        <label for="search_mode" class="form-label">Search Mode</label>
+
+        <select
+            class="form-select"
+            id="search_mode"
+            name="search_mode"
+        >
+            <option
+                value="keyword"
+                {% if search_mode == "keyword" %}selected{% endif %}
+            >
+                Keyword
+            </option>
+
+            <option
+                value="semantic"
+                {% if search_mode == "semantic" %}selected{% endif %}
+            >
+                Semantic
+            </option>
+        </select>
     </div>
     <!-- Filter Dropdown -->
     <div class="mg-filter-wrapper me-2">

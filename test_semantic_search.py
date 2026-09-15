@@ -6,4 +6,4 @@ results = semantic_search(
 )
 
 for result in results:
-    print(result["title"])
+    print(result["title"], "→", result["score"])
