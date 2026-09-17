@@ -144,6 +144,9 @@ async def get_notes(
             q,
             request.session.get("user_id"),
             limit=per_page,
+            important= filter_important,
+            category=category,
+            tag=tag,
         )
     elif q:
         query["$or"] = [
