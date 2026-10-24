@@ -212,7 +212,7 @@ Home
     
     <!-- Search Input -->
     <div class="flex-grow-1 me-2">
-      <h4><label for="search_note" class="mb-2 fw-normal text-success">Search Notes</label></h4>
+      <h4><label for="search_note" class="mb-2 fw-semibold text-success">Search Notes</label></h4>
       <input 
         type="text" 
         class="form-control py-2" 
@@ -516,24 +516,31 @@ Home
 <!-- Knowledge Grove Feature -->
 <section class="container my-4" aria-labelledby="knowledge-grove-title">
     <div class="knowledge-grove-card">
+
         <div class="knowledge-grove-icon">
             <i class="bi bi-diagram-3"></i>
         </div>
 
         <div class="knowledge-grove-content">
-            <h2 id="knowledge-grove-title" class="mb-2 fw-normal text-success">
+            <span class="knowledge-grove-eyebrow">
+                YOUR IDEAS, CONNECTED
+            </span>
+
+            <h2 id="knowledge-grove-title">
                 Explore your Knowledge Grove
             </h2>
+
             <p>
-                Discover connections between your notes and see how your ideas fit together.
+                Discover connections between your notes and uncover
+                relationships you might have missed.
             </p>
         </div>
 
-        <a href="/knowledge-grove"
-           class="btn btn-light btn-mg px-3 me-md-2 fw-normal hero-bnr-btn">
+        <a href="/knowledge-grove" class="btn mg-grove-btn">
             Explore Grove
-            <i class="bi bi-arrow-right ms-1"></i>
+            <i class="bi bi-arrow-up-right ms-2"></i>
         </a>
+
     </div>
 </section>
 

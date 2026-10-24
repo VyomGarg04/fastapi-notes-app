@@ -491,3 +491,640 @@
     }
 
 }
+
+
+
+/* Knowledge Grove */
+/* Knowledge Grove feature */
+.knowledge-grove-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem 1.75rem;
+    overflow: hidden;
+
+    background: linear-gradient(
+        110deg,
+        #edf6ef 0%,
+        #f7faf7 65%,
+        #ffffff 100%
+    );
+
+    border: 1px solid #d8e8dc;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(32, 79, 57, 0.05);
+
+    transition:
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.knowledge-grove-card:hover {
+    border-color: #b8d7c1;
+    box-shadow: 0 8px 24px rgba(32, 79, 57, 0.09);
+}
+
+.knowledge-grove-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 58px;
+    height: 58px;
+
+    background: #dcefe1;
+    color: #276749;
+    border: 1px solid #cce4d2;
+    border-radius: 16px;
+
+    font-size: 1.65rem;
+}
+
+.knowledge-grove-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.knowledge-grove-eyebrow {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: #43805c;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.knowledge-grove-content h2 {
+    margin: 0 0 0.4rem;
+    color: #204c37;
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.knowledge-grove-content p {
+    margin: 0;
+    max-width: 600px;
+    color: #64776a;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.mg-grove-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    padding: 0.7rem 1rem;
+    background: #286b4f;
+    border: 1px solid #286b4f;
+    border-radius: 10px;
+
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.mg-grove-btn:hover {
+    background: #1d533c;
+    border-color: #1d533c;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.mg-grove-btn:focus-visible {
+    outline: 3px solid #a8d5b5;
+    outline-offset: 3px;
+}
+
+@media (max-width: 576px) {
+    .knowledge-grove-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1.15rem;
+    }
+
+    .knowledge-grove-icon {
+        flex-basis: 48px;
+        height: 48px;
+        font-size: 1.4rem;
+    }
+
+    .knowledge-grove-content {
+        flex: 1 1 calc(100% - 64px);
+    }
+
+    .knowledge-grove-content p {
+        font-size: 0.88rem;
+    }
+
+    .mg-grove-btn {
+        width: 100%;
+    }
+}
+
+
+
+
+/* =========================================
+   MindGrove Dashboard UI Refresh
+   ========================================= */
+
+:root {
+    --mg-green-900: #204c37;
+    --mg-green-700: #286b4f;
+    --mg-green-600: #37845f;
+    --mg-green-100: #eaf4ed;
+    --mg-border: #dfe9e2;
+    --mg-muted: #718078;
+    --mg-card-shadow: 0 3px 14px rgba(31, 67, 48, 0.045);
+    --mg-card-hover: 0 10px 26px rgba(31, 67, 48, 0.09);
+}
+
+/* Overall page rhythm */
+body {
+    background: #f7f9f7;
+}
+
+#search-notes,
+#notes {
+    scroll-margin-top: 90px;
+}
+
+#search-notes,
+#notes,
+.knowledge-grove-card {
+    font-family: inherit;
+}
+
+/* -----------------------------------------
+   Stats cards
+   ----------------------------------------- */
+
+.mg-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 94px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid var(--mg-border);
+    border-radius: 16px;
+    box-shadow: var(--mg-card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mg-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--mg-card-hover);
+}
+
+.mg-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: var(--mg-green-100);
+    font-size: 1.35rem;
+}
+
+.mg-stat-card h3 {
+    margin: 0 0 3px;
+    color: var(--mg-green-900);
+    font-size: 1.55rem;
+    font-weight: 750;
+    line-height: 1.2;
+}
+
+.mg-stat-card p {
+    margin: 0;
+    color: var(--mg-muted);
+    font-size: 0.84rem;
+}
+
+/* -----------------------------------------
+   Search area
+   ----------------------------------------- */
+
+#search-notes {
+    margin-top: 2rem !important;
+    margin-bottom: 1.5rem;
+}
+
+#search-notes form {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+}
+
+#search-notes form > div:first-child {
+    min-width: 180px;
+}
+
+#search-notes label {
+    color: #52665a;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+#search-notes h4 {
+    margin-bottom: 10px;
+}
+
+#search_note,
+#search-notes .form-select {
+    min-height: 44px;
+    border: 1px solid #d8e3db;
+    border-radius: 10px;
+    background-color: #ffffff;
+    color: #263c30;
+    font-size: 0.92rem;
+    box-shadow: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#search_note {
+    padding-left: 14px;
+}
+
+#search_note::placeholder {
+    color: #9aa69e;
+}
+
+#search_note:focus,
+#search-notes .form-select:focus {
+    border-color: #70a986;
+    box-shadow: 0 0 0 3px rgba(55, 132, 95, 0.12);
+}
+
+#search-notes .mg-btn-outline {
+    min-height: 44px;
+    border: 1px solid #cbded0;
+    border-radius: 10px;
+    background: #ffffff;
+    color: var(--mg-green-700);
+    font-weight: 600;
+}
+
+#search-notes .mg-btn-outline:hover {
+    background: var(--mg-green-100);
+}
+
+#search-notes button[type="submit"] {
+    min-height: 44px;
+    padding: 0 22px;
+    border: 1px solid var(--mg-green-700);
+    border-radius: 10px;
+    background: var(--mg-green-700);
+    color: #ffffff;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+#search-notes button[type="submit"]:hover {
+    background: var(--mg-green-900);
+    transform: translateY(-1px);
+}
+
+#search-notes label[for="search_note"] {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Keep the custom filter dropdown above surrounding cards */
+.mg-filter-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.mg-filter-menu {
+    z-index: 1050;
+}
+
+/* -----------------------------------------
+   Knowledge Grove feature
+   ----------------------------------------- */
+
+.knowledge-grove-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 24px;
+    border: 1px solid #d8e8dc;
+    border-radius: 18px;
+    background: linear-gradient(110deg, #edf6ef 0%, #f8fbf8 72%, #ffffff 100%);
+    box-shadow: var(--mg-card-shadow);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.knowledge-grove-card:hover {
+    border-color: #bfd9c6;
+    box-shadow: var(--mg-card-hover);
+}
+
+.knowledge-grove-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 56px;
+    width: 56px;
+    height: 56px;
+    border: 1px solid #cfe4d4;
+    border-radius: 16px;
+    background: #deefe2;
+    color: var(--mg-green-700);
+    font-size: 1.6rem;
+}
+
+.knowledge-grove-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.knowledge-grove-eyebrow {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--mg-green-600);
+    font-size: 0.69rem;
+    font-weight: 750;
+    letter-spacing: 0.12em;
+}
+
+.knowledge-grove-content h2 {
+    margin: 0 0 6px;
+    color: var(--mg-green-900);
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.knowledge-grove-content p {
+    max-width: 620px;
+    margin: 0;
+    color: var(--mg-muted);
+    font-size: 0.91rem;
+    line-height: 1.6;
+}
+
+.mg-grove-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-height: 43px;
+    padding: 0 16px;
+    border: 1px solid var(--mg-green-700);
+    border-radius: 10px;
+    background: var(--mg-green-700);
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.mg-grove-btn:hover {
+    border-color: var(--mg-green-900);
+    background: var(--mg-green-900);
+    color: #ffffff;
+}
+
+/* -----------------------------------------
+   Your Notes heading and grid
+   ----------------------------------------- */
+
+#notes {
+    margin-top: 2.5rem !important;
+    margin-bottom: 2rem;
+}
+
+#notes > h2 {
+    margin-bottom: 1.25rem !important;
+    color: var(--mg-green-900);
+    font-size: 1.65rem;
+    font-weight: 750;
+    letter-spacing: -0.025em;
+}
+
+#notes-container {
+    row-gap: 1.25rem;
+}
+
+/* Individual note cards */
+.mg-note-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--mg-border);
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: var(--mg-card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease,
+                border-color 0.2s ease;
+}
+
+.mg-note-card:hover {
+    transform: translateY(-3px);
+    border-color: #cbded0;
+    box-shadow: var(--mg-card-hover);
+}
+
+.mg-note-card-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    padding: 20px 20px 12px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.mg-note-card-content:hover {
+    color: inherit;
+}
+
+.mg-note-title {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0 0 10px;
+    color: var(--mg-green-900);
+    font-size: 1.08rem;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+.mg-note-content {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0 0 16px;
+    color: #65736b;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 2;
+}
+
+.mg-note-card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.mg-note-meta {
+    color: #8b9990;
+    font-size: 0.73rem;
+    overflow-wrap: anywhere;
+}
+
+.mg-important {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    border-radius: 7px;
+    background: #fff5dd;
+    color: #8c671b;
+    font-size: 0.75rem;
+    font-weight: 650;
+}
+
+/* Card actions */
+.mg-note-card > .btn-group {
+    display: flex;
+    gap: 8px;
+    padding: 0 20px 18px;
+}
+
+.mg-note-card > .btn-group > .btn {
+    flex: 1;
+    border-radius: 9px !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 8px 10px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.mg-note-card > .btn-group > .btn-outline-secondary {
+    border-color: #d8e3db;
+    color: #52665a;
+}
+
+.mg-note-card > .btn-group > .btn-outline-secondary:hover {
+    border-color: #c3d9ca;
+    background: #edf6ef;
+    color: var(--mg-green-900);
+}
+
+.mg-note-card > .btn-group > .btn-outline-danger {
+    border-color: #f0dada;
+    color: #b34d4d;
+}
+
+.mg-note-card > .btn-group > .btn-outline-danger:hover {
+    border-color: #b34d4d;
+    background: #b34d4d;
+    color: #ffffff;
+}
+
+/* Empty results */
+#notes .alert-info {
+    padding: 22px;
+    border: 1px solid var(--mg-border);
+    border-radius: 14px;
+    background: #ffffff;
+    color: #607168;
+}
+
+/* Pagination */
+body > .d-flex.justify-content-center {
+    margin-bottom: 2.5rem;
+}
+
+/* -----------------------------------------
+   Responsive adjustments
+   ----------------------------------------- */
+
+@media (max-width: 767.98px) {
+    #search-notes form {
+        align-items: stretch;
+        flex-wrap: wrap;
+    }
+
+    #search-notes form > div:first-child {
+        flex: 1 1 100%;
+        margin-right: 0 !important;
+    }
+
+    #search-notes form > div:not(:first-child) {
+        margin-right: 0 !important;
+    }
+
+    #search-notes form > div:nth-child(2) {
+        flex: 1 1 130px;
+    }
+
+    #search-notes form > div:nth-last-child(2),
+    #search-notes form > div:last-child {
+        flex: 0 0 auto;
+    }
+
+    .knowledge-grove-card {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        padding: 18px;
+    }
+
+    .knowledge-grove-content {
+        flex: 1 1 calc(100% - 76px);
+    }
+
+    .mg-grove-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .mg-stat-card {
+        min-height: 80px;
+        padding: 14px;
+    }
+
+    #notes > h2 {
+        font-size: 1.45rem;
+    }
+
+    .mg-note-card-content {
+        padding: 17px 16px 10px;
+    }
+
+    .mg-note-card > .btn-group {
+        padding: 0 16px 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mg-stat-card,
+    .mg-note-card,
+    .knowledge-grove-card,
+    .mg-grove-btn {
+        transition: none;
+    }
+}
