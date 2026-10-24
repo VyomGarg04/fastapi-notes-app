@@ -124,7 +124,7 @@
                 <div class="mg-related-note-match">
 
                     <div class="mg-related-note-score">
-                        {{ item.score }} match points
+                        {{ "%.0f"|format(item.score * 100) }}% semantic similarity match points
                     </div>
 
                     <div class="mg-related-note-reason">

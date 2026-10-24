@@ -66,52 +66,46 @@ def get_note_stats(user_id: str):
 
 
 def get_related_notes(note, user_id):
-    query = {
-        "user_id" : user_id,
-        "_id": {"$ne": note["_id"]}
-    }
-    candidates = list(notes_collection.find(query))
-    print("RELATED CANDIDATES:", len(candidates))
+    embedding = note.get("embedding")
 
-    current_category = note.get("category")
-    current_tags = set(note.get("tags", []))
+    if embedding:
+        pipeline = [
+            {
+                "$vectorSearch": {
+                    "index": "note_embedding_index",
+                    "path": "embedding",
+                    "queryVector": embedding,
+                    "numCandidates": 50,
+                    "limit": 10,
+                    "filter": {"user_id": user_id}
+                }
+            },
+            {
+                "$project": {
+                    "title": 1,
+                    "category": 1,
+                    "tags": 1,
+                    "score": {"$meta": "vectorSearchScore"}
+                }
+            }
+        ]
 
-    related = []
+        candidates = list(notes_collection.aggregate(pipeline))
+        candidates = [
+            candidate for candidate in candidates
+            if candidate["_id"] != note["_id"]
+        ]
 
-    # Finding the related notes
-    for candidate in candidates:
-        score = 0
+        related = []
 
-        candidate_category = candidate.get("category")
-        candidate_tags = set(candidate.get("tags", []))
-
-        if current_category and candidate_category == current_category:
-            score += 3
-
-        shared_tags = current_tags.intersection(candidate_tags)
-        score += len(shared_tags) * 2
-
-        if score > 0:
+        for candidate in candidates[:5]:
             related.append({
                 "id": str(candidate["_id"]),
                 "title": candidate.get("title", ""),
                 "category": candidate.get("category"),
-                "shared_tags": list(shared_tags),
-                "score": score,
-                "same_category": (
-                    current_category
-                    and candidate_category == current_category
-                ),
+                "score": candidate["score"]
             })
-
-
-    related.sort(
-        key=lambda item: item["score"],
-        reverse=True
-    )
-    
-    return related[:5]
-
+        return related
 
 
 
