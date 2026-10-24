@@ -205,14 +205,14 @@ Home
     </div>
 </section>
 
-
+<br>
 <!-- Search a Note -->
 <section id="search-notes" class="container mt-3">
   <form action="/notes" method="get" class="d-flex align-items-end">
     
     <!-- Search Input -->
     <div class="flex-grow-1 me-2">
-      <h4><label for="search_note" class="form-label">Search Notes</label></h4>
+      <h4><label for="search_note" class="mb-2 fw-normal text-success">Search Notes</label></h4>
       <input 
         type="text" 
         class="form-control py-2" 
@@ -510,6 +510,32 @@ Home
   </form>
 </section>
 
+
+<br><br>
+
+<!-- Knowledge Grove Feature -->
+<section class="container my-4" aria-labelledby="knowledge-grove-title">
+    <div class="knowledge-grove-card">
+        <div class="knowledge-grove-icon">
+            <i class="bi bi-diagram-3"></i>
+        </div>
+
+        <div class="knowledge-grove-content">
+            <h2 id="knowledge-grove-title" class="mb-2 fw-normal text-success">
+                Explore your Knowledge Grove
+            </h2>
+            <p>
+                Discover connections between your notes and see how your ideas fit together.
+            </p>
+        </div>
+
+        <a href="/knowledge-grove"
+           class="btn btn-light btn-mg px-3 me-md-2 fw-normal hero-bnr-btn">
+            Explore Grove
+            <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+    </div>
+</section>
 
 <br><br>
 

@@ -1,4 +1,4 @@
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi import APIRouter, Request
 from config.db import conn
 from utils.auth import get_current_user
@@ -107,6 +107,111 @@ def get_related_notes(note, user_id):
             })
         return related
 
+
+
+
+@note.get("/api/knowledge-grove")
+async def get_knowledge_drove(request: Request):
+    if not get_current_user(request):
+        return JSONResponse(
+            {"error": "Authentication required"},
+            status_code=401
+        )
+    user_id = request.session.get("user_id")
+
+    documents = list(
+        notes_collection.find(
+            {"user_id": user_id},
+            {
+                "title": 1,
+                "category": 1,
+                "tags": 1,
+                "embedding": 1,
+            }
+        ).sort("created_at", -1).limit(100)
+    )
+
+    nodes = [
+        {
+            "id": str(doc["_id"]),
+            "title": doc.get("title", "Untitled"),
+            "category": doc.get("category") or "Uncategorized",
+        }
+        for doc in documents
+    ]
+
+    edges = []
+
+    for i in range(len(documents)):
+        for j in range(i+1, len(documents)):
+            first = documents[i]
+            second = documents[j]
+
+            first_embedding = first.get("embedding")
+            second_embedding = second.get("embedding")
+
+            similarity = None
+            #Embeddings are normalized when generated
+            if first_embedding and second_embedding:
+                if len(first_embedding) == len(second_embedding):
+                    similarity = sum(
+                        a * b
+                        for a,b in zip(
+                            first_embedding,
+                            second_embedding
+                        )
+                    )
+
+            shared_tags = (
+                set(first.get("tags", []))
+                & set(second.get("tags", []))
+            )
+
+            same_category = (
+                first.get("category")
+                and first.get("category") == second.get("category")
+            )
+
+            #Connect semantically similar notes.
+            if similarity is not None and similarity >= 0.65:
+                edges.append({
+                    "source": str(first["_id"]),
+                    "target": str(second["_id"]),
+                    "weight": round(similarity, 3),
+                    "reason": "semantic",
+                })
+
+            # Fallback when semantic similarity isn't available.
+            elif similarity is None and (shared_tags or same_category):
+                edges.append({
+                    "source": str(first["_id"]),
+                    "target": str(second["_id"]),
+                    "weight": 0.5,
+                    "reason": "category/tag",
+                })
+    return {
+        "nodes": nodes,
+        "edges": edges
+    }
+
+
+
+
+
+@note.get("/knowledge-grove", response_class=HTMLResponse)
+async def knowledge_grove_page(request: Request):
+    if not get_current_user(request):
+        return RedirectResponse("/login", status_code=302)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="knowledge_grove.html",
+        context={
+            "request": request,
+            "show_navbar": True,
+            "use_container": False,
+        },
+    )
 
 
 

@@ -1,0 +1,298 @@
+
+{% extends "base.html" %}
+
+{% block title %}Knowledge Grove | MindGrove{% endblock %}
+
+{% block styles %}
+<style>
+    .grove-page {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 24px;
+        box-sizing: border-box;
+        color: #183d32;
+    }
+
+    .grove-page,
+    .grove-page * {
+        box-sizing: border-box;
+    }
+
+    .grove-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .grove-page h1 {
+        font-size: 2rem;
+        margin: 0 0 8px;
+    }
+
+    .grove-subtitle {
+        margin: 0;
+        color: #64756e;
+    }
+
+    .grove-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 12px;
+        font-size: 13px;
+    }
+
+    .grove-legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .grove-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    #grove-status {
+        margin: 12px 0;
+        color: #64756e;
+    }
+
+    #grove-graph {
+        width: 100%;
+        height: 650px;
+        min-height: 450px;
+        overflow: hidden;
+        border: 1px solid #dce8e0;
+        border-radius: 18px;
+        background: #f8fbf8;
+    }
+
+    #grove-graph svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        cursor: grab;
+    }
+
+    .grove-node {
+        cursor: pointer;
+    }
+
+    .grove-node circle {
+        stroke: white;
+        stroke-width: 2px;
+    }
+
+    .grove-node text {
+        font-size: 12px;
+        font-weight: 600;
+        fill: #244b3e;
+        paint-order: stroke;
+        stroke: #f8fbf8;
+        stroke-width: 4px;
+        stroke-linejoin: round;
+        pointer-events: none;
+    }
+
+    .grove-edge {
+        stroke: #a9c7b5;
+        stroke-opacity: 0.7;
+    }
+
+    @media (max-width: 600px) {
+        .grove-page {
+            padding: 16px;
+        }
+
+        #grove-graph {
+            height: 65vh;
+            min-height: 360px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="grove-page">
+    <header class="grove-header">
+        <div>
+            <h1>Knowledge Grove</h1>
+            <p class="grove-subtitle">
+                Explore how your ideas connect.
+            </p>
+        </div>
+
+        <a href="/notes" class="btn btn-outline-success">
+            Back to notes
+        </a>
+    </header>
+
+    <div class="grove-legend">
+        <span>
+            <i class="grove-dot" style="background:#39866b"></i>
+            DSA
+        </span>
+        <span>
+            <i class="grove-dot" style="background:#d59b45"></i>
+            Other categories
+        </span>
+        <span>
+            <i class="grove-dot" style="background:#8b79c6"></i>
+            Uncategorized
+        </span>
+    </div>
+
+    <p id="grove-status">Growing your knowledge graph...</p>
+    <div id="grove-graph" aria-label="Interactive graph of your notes"></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+(async function () {
+    const graphElement = document.getElementById("grove-graph");
+    const statusElement = document.getElementById("grove-status");
+
+    try {
+        const response = await fetch("/api/knowledge-grove");
+
+        if (!response.ok) {
+            throw new Error(
+                response.status === 401
+                    ? "Your session has expired. Please log in again."
+                    : "Could not load your knowledge graph."
+            );
+        }
+
+        const graph = await response.json();
+        const nodes = graph.nodes;
+        const edges = graph.edges;
+
+        if (!nodes.length) {
+            statusElement.textContent =
+                "Your grove is empty. Create a note to plant your first seed.";
+            return;
+        }
+
+        if (typeof d3 === "undefined") {
+            throw new Error("The graph library could not load.");
+        }
+
+        statusElement.textContent =
+            `${nodes.length} notes · ${edges.length} connections`;
+
+        const width = graphElement.clientWidth;
+        const height = graphElement.clientHeight;
+
+        const colors = category => {
+            if (!category || category === "Uncategorized") {
+                return "#8b79c6";
+            }
+            if (category.toLowerCase() === "dsa") {
+                return "#39866b";
+            }
+            return "#d59b45";
+        };
+
+        const svg = d3.select(graphElement)
+            .append("svg")
+            .attr("viewBox", `0 0 ${width} ${height}`);
+
+        const zoomLayer = svg.append("g");
+
+        svg.call(
+            d3.zoom()
+                .scaleExtent([0.3, 3])
+                .on("zoom", event => {
+                    zoomLayer.attr("transform", event.transform);
+                })
+        );
+
+        const simulation = d3.forceSimulation(nodes)
+            .force(
+                "link",
+                d3.forceLink(edges)
+                    .id(d => d.id)
+                    .distance(115)
+            )
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collide", d3.forceCollide(42));
+
+        const link = zoomLayer.append("g")
+            .selectAll("line")
+            .data(edges)
+            .join("line")
+            .attr("class", "grove-edge")
+            .attr("stroke-width", d =>
+                Math.max(1, Math.min(4, (d.weight || 0.5) * 4))
+            );
+
+        const node = zoomLayer.append("g")
+            .selectAll("g")
+            .data(nodes)
+            .join("g")
+            .attr("class", "grove-node")
+            .on("click", (event, d) => {
+                window.location.href =
+                    `/notes/view/${encodeURIComponent(d.id)}`;
+            })
+            .call(
+                d3.drag()
+                    .on("start", (event, d) => {
+                        if (!event.active) simulation.alphaTarget(0.3).restart();
+                        d.fx = d.x;
+                        d.fy = d.y;
+                    })
+                    .on("drag", (event, d) => {
+                        d.fx = event.x;
+                        d.fy = event.y;
+                    })
+                    .on("end", (event, d) => {
+                        if (!event.active) simulation.alphaTarget(0);
+                        d.fx = null;
+                        d.fy = null;
+                    })
+            );
+
+        node.append("circle")
+            .attr("r", 9)
+            .attr("fill", d => colors(d.category));
+
+        node.append("text")
+            .attr("x", 13)
+            .attr("y", 4)
+            .text(d => d.title.length > 28
+                ? d.title.slice(0, 25) + "..."
+                : d.title
+            );
+
+        node.append("title")
+            .text(d => `${d.title} · ${d.category}`);
+
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node.attr(
+                "transform",
+                d => `translate(${d.x},${d.y})`
+            );
+        });
+
+    } catch (error) {
+        statusElement.textContent = error.message;
+        console.error("Knowledge Grove error:", error);
+    }
+})();
+</script>
+{% endblock %}

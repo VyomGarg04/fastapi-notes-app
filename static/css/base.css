@@ -344,3 +344,14 @@ a:hover {
         padding: 0 12px;
     }
 }
+
+
+/* MindGrove navbar logo */
+.navbar .mg-brand-logo {
+    display: block;
+    width: 36px;
+    height: 36px;
+    max-width: 36px;
+    object-fit: contain;
+    flex: 0 0 36px;
+}
