@@ -9,8 +9,8 @@ from utils.embedding import generate_embedding
 from utils.semantic_search import semantic_search
 import starlette.status as status
 from bson import ObjectId
+from bson.errors import InvalidId
 from datetime import datetime, UTC
-from bson import ObjectId
 
 note = APIRouter()
 templates = Jinja2Templates(directory = "templates")
@@ -427,10 +427,19 @@ async def edit_note(request: Request, id: str):
     if not current_user:
         return RedirectResponse("/login", status_code=302)
     
+    try:
+        note_object_id = ObjectId(id)
+    except InvalidId:
+        return JSONResponse({"detail": "Not Found"}, status_code=404)
+
     note_found = notes_collection.find_one({
-        "_id": ObjectId(id),
-        "user_id":request.session.get("user_id")
-        })
+        "_id": note_object_id,
+        "user_id": request.session.get("user_id")
+    })
+
+    if not note_found:
+        return JSONResponse({"detail": "Not Found"}, status_code=404)
+
     note_found = noteEntity(note_found)
     return templates.TemplateResponse(
         request=request,
@@ -481,15 +490,35 @@ async def save_edited_note(request: Request, id:str):
     except Exception as e:
         print(f"Embedding generation failed: {e}")
 
+    try:
+        note_object_id = ObjectId(id)
+    except InvalidId:
+        return JSONResponse(
+            {"detail": "Not Found"},
+            status_code=404
+        )
+
+    existing_note = notes_collection.find_one({
+        "_id": note_object_id,
+        "user_id": request.session.get("user_id")
+    })
+
+    if not existing_note:
+        return JSONResponse(
+            {"detail": "Not Found"},
+            status_code=404
+        )
+    
     if embedding is not None:
         update_data["embedding"] = embedding
-    
-    notes_collection.update_one({
-        "_id": ObjectId(id),
-        "user_id":request.session.get("user_id")
+        
+    notes_collection.update_one(
+        {
+            "_id": note_object_id,
+            "user_id": request.session.get("user_id")
         },
         {"$set": update_data}
-        )
+    )
     
     return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)
 
