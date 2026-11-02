@@ -1128,3 +1128,19 @@ body > .d-flex.justify-content-center {
         transition: none;
     }
 }
+
+
+.delete-note-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.delete-note-form button {
+    height: 100%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.delete-note-form button {
+    border-top-left-radius: var(--bs-btn-border-radius) !important;
+    border-bottom-left-radius: var(--bs-btn-border-radius) !important;
+}

@@ -155,3 +155,33 @@
     text-decoration: none;
     transform: translateY(-1px);
 }
+
+
+.note-actions {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.note-actions > a,
+.note-actions > form {
+    flex: 1;
+    min-width: 0;
+}
+
+.note-actions form {
+    margin: 0;
+    display: flex;
+}
+
+.note-actions form button {
+    width: 100%;
+}
+
+.note-actions .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+}

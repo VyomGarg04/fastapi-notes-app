@@ -1,6 +1,6 @@
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi import APIRouter, Request
-from config.db import conn
+from config.db import db
 from utils.auth import get_current_user
 from utils.greeting import get_greeting
 from schemas.note import noteEntity, notesEntity
@@ -15,7 +15,7 @@ from datetime import datetime, UTC
 note = APIRouter()
 templates = Jinja2Templates(directory = "templates")
 
-notes_collection = conn.notes.notes
+notes_collection = db.notes
 
 
 
@@ -401,17 +401,36 @@ async def create_note(request: Request):
 
 
 #to delete the note
-@note.get("/notes/delete/{id}")
-async def  delete_note(request:Request, id: str):
+@note.post("/notes/delete/{id}")
+async def delete_note(request: Request, id: str):
     current_user = get_current_user(request)
+
     if not current_user:
         return RedirectResponse("/login", status_code=302)
 
-    notes_collection.delete_one({
-        "_id": ObjectId(id),
-        "user_id":request.session.get("user_id")
+    try:
+        note_object_id = ObjectId(id)
+    except InvalidId:
+        return JSONResponse(
+            {"detail": "Not Found"},
+            status_code=404
+        )
+
+    result = notes_collection.delete_one({
+        "_id": note_object_id,
+        "user_id": request.session.get("user_id")
     })
-    return RedirectResponse(url = "/notes", status_code=status.HTTP_303_SEE_OTHER)
+
+    if result.deleted_count == 0:
+        return JSONResponse(
+            {"detail": "Not Found"},
+            status_code=404
+        )
+
+    return RedirectResponse(
+        url="/notes",
+        status_code=status.HTTP_303_SEE_OTHER
+    )
 
 
 

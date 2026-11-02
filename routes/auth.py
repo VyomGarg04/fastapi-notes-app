@@ -2,14 +2,14 @@ from fastapi import Request, APIRouter
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 import starlette.status as status
-from config.db import conn
+from config.db import db
 from utils.security import create_hash, verify_password
 from schemas.user import userEntity, usersEntity
 
 
 user = APIRouter()
 templates = Jinja2Templates(directory="templates")
-user_collection = conn.notes.users
+users_collection = db.users
 
 #SIGNUP
 @user.get("/signup", response_class = HTMLResponse)
@@ -40,7 +40,7 @@ async def create_user(request: Request):
     if not email:
         return RedirectResponse(url="/signup?error=MissingEmail",status_code=status.HTTP_303_SEE_OTHER)
     
-    existing_user = user_collection.find_one({"email":email})
+    existing_user = users_collection.find_one({"email":email})
     if existing_user:
         return RedirectResponse(url="/signup?error=EmailExists",status_code=status.HTTP_303_SEE_OTHER)
     
@@ -52,7 +52,7 @@ async def create_user(request: Request):
         "email": formDict["email"].lower(),
         "password": hashed_password
     }
-    user_collection.insert_one(new_user)
+    users_collection.insert_one(new_user)
     return RedirectResponse(url = "/login?msg=AccountCreated", status_code=status.HTTP_303_SEE_OTHER)
 
 
@@ -83,7 +83,7 @@ async def check_user(request: Request):
         return RedirectResponse(url="/login?error=MissingEmail",status_code=status.HTTP_303_SEE_OTHER)
     
     email = email.lower()
-    user = user_collection.find_one({"email":email})
+    user = users_collection.find_one({"email":email})
     if not user:
         return RedirectResponse(url="/login?error=InvalidCredentials",status_code=status.HTTP_303_SEE_OTHER)
     stored_hash  = user["password"]
